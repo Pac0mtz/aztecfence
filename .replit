@@ -1,0 +1,39 @@
+modules = ["nodejs-20"]
+run = "npm run dev"
+hidden = [".config", "node_modules", "dist"]
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+PORT = "3000"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+# One-time install on first run
+[unitTest]
+language = "nodejs"
+
+# Production deployment: build the static SPA, then serve it with vite preview
+# (vite preview provides the SPA history-fallback BrowserRouter needs).
+[deployment]
+deploymentTarget = "autoscale"
+build = ["sh", "-c", "npm ci && npm run build"]
+run = ["sh", "-c", "npm run preview"]
+
+[workflows]
+runButton = "Dev"
+
+[[workflows.workflow]]
+name = "Dev"
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /terms-and-conditions/
+
+Sitemap: https://aztecfence.net/sitemap.xml
