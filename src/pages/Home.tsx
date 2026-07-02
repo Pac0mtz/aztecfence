@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Phone, Check, ArrowRight, Star, Shield, Users, Award, Quote, Trees, Lock, Grid3x3, Sparkles, Building2, House } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -235,12 +235,6 @@ function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string })
 export default function Home() {
   const [activeService, setActiveService] = useState("wood");
   const active = services.find((s) => s.id === activeService) || services[0];
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
 
   return (
     <div>
@@ -250,8 +244,8 @@ export default function Home() {
         keywords="fence company Northern Illinois, fence installation, aluminum fence, vinyl fence, wood fence, chain link fence, privacy fence, commercial fencing, Round Lake IL, Lake County fence contractor"
         path="/"
       />
-      {/* Hero Section — Full viewport with parallax */}
-      <section ref={heroRef} className="relative h-[68vh] min-h-[440px] md:h-[80vh] md:max-h-[760px] text-white overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-[68vh] min-h-[440px] md:h-[80vh] md:max-h-[760px] text-white overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/images/Residential-vinyl-privacy-fence-04-1.jpg"
@@ -259,10 +253,10 @@ export default function Home() {
             fetchPriority="high"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/80 via-[#0f172a]/50 to-[#0f172a]/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/85 via-[#0f172a]/70 to-[#0f172a]/95" />
         </div>
 
-        <motion.div style={{ opacity: heroOpacity }} className="relative h-full flex items-center">
+        <div className="relative h-full flex items-center [text-shadow:0_2px_16px_rgb(0_0_0_/_45%)]">
           <div className="max-w-7xl mx-auto px-4 w-full">
             <motion.div
               initial={{ opacity: 0 }}
@@ -338,7 +332,7 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Image Carousel — Auto-advancing fence showcase */}
@@ -558,7 +552,7 @@ export default function Home() {
                 <motion.img
                   src={active.image}
                   alt={active.title}
-                  className="w-full h-72 md:h-96 object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-72 md:absolute md:inset-0 md:h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">

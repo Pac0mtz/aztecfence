@@ -19,7 +19,7 @@ export default function TopBar() {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <a href="https://www.facebook.com/aztecfencecompanyinc1/" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+          <a href="https://www.facebook.com/aztecfencecompanyinc1/" target="_blank" rel="noopener noreferrer" aria-label="Aztec Fence on Facebook" className="hover:text-cyan-400 transition-colors">
             <Facebook size={16} />
           </a>
           <a href="https://www.yelp.com/biz/aztec-fence-company-round-lake" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors text-xs font-bold">

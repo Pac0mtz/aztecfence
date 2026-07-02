@@ -51,6 +51,11 @@ export default function FenceStylePage({
   title, subtitle, description, benefits, heroImage, galleryImages,
   seoTitle, metaDescription, intro2, features = DEFAULT_FEATURES, faqs = [],
 }: FenceStylePageProps) {
+  // Use a different photo for the intro section than the hero, so the same image
+  // isn't repeated on the page. Falls back gracefully for short galleries.
+  const introImage = galleryImages.find((g) => g !== heroImage) ?? galleryImages[0] ?? heroImage;
+  const ctaImage = galleryImages.find((g) => g !== heroImage && g !== introImage) ?? heroImage;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -149,7 +154,7 @@ export default function FenceStylePage({
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="md:w-1/2">
               <div className="relative group overflow-hidden rounded-3xl shadow-2xl shadow-gray-200/50">
-                <img src={heroImage} alt={`${title} fence by Aztec Fence`} className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img src={introImage} alt={`${title} fence by Aztec Fence`} className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
             </motion.div>
@@ -273,7 +278,7 @@ export default function FenceStylePage({
       {/* CTA */}
       <section className="py-20 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <img src={heroImage} alt="" aria-hidden="true" className="w-full h-full object-cover" />
+          <img src={ctaImage} alt="" aria-hidden="true" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/90 to-blue-900/90" />
         <div className="relative max-w-3xl mx-auto px-4">

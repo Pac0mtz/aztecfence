@@ -117,22 +117,22 @@ export default function Contact() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
-                          <input required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="John Doe" />
+                          <label htmlFor="contact-name" className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
+                          <input id="contact-name" name="name" autoComplete="name" required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="John Doe" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Email *</label>
-                          <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="john@example.com" />
+                          <label htmlFor="contact-email" className="block text-sm font-bold text-gray-700 mb-2">Email *</label>
+                          <input id="contact-email" name="email" autoComplete="email" required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="john@example.com" />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Phone *</label>
-                          <input required type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="(847) 740-4655" />
+                          <label htmlFor="contact-phone" className="block text-sm font-bold text-gray-700 mb-2">Phone *</label>
+                          <input id="contact-phone" name="phone" autoComplete="tel" required type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50" placeholder="(847) 740-4655" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">Service Interested In</label>
-                          <select value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50">
+                          <label htmlFor="contact-service" className="block text-sm font-bold text-gray-700 mb-2">Service Interested In</label>
+                          <select id="contact-service" name="service" value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50">
                             <option value="">Select a service</option>
                             <option value="wood">Wood Fences</option>
                             <option value="privacy">Privacy Fences</option>
@@ -146,8 +146,8 @@ export default function Contact() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Message</label>
-                        <textarea rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50 resize-none" placeholder="Tell us about your project..." />
+                        <label htmlFor="contact-message" className="block text-sm font-bold text-gray-700 mb-2">Message</label>
+                        <textarea id="contact-message" name="message" rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50 resize-none" placeholder="Tell us about your project..." />
                       </div>
                       <button type="submit" className="group w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-[1.02]">
                         <Send size={18} />
