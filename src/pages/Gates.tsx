@@ -29,7 +29,7 @@ export default function Gates() {
       {/* Hero — Parallax */}
       <section ref={heroRef} className="relative h-[60vh] min-h-[450px] text-white overflow-hidden">
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-          <img src="/images/IMG_9651-qoso1lt7nrozj7wpqcc814w4zh0zl4ps9qr85zsed4.jpg" alt="Gates" className="w-full h-[120%] object-cover" />
+          <img src="/images/gate-3139.jpg" alt="Custom aluminum gate installed by Aztec Fence" className="w-full h-[120%] object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/90 to-[#0f172a]/50" />
         </motion.div>
         <div className="relative h-full flex items-center">
@@ -109,7 +109,7 @@ export default function Gates() {
             {[
               "/images/gate-05.jpg",
               "/images/gate-06.jpg",
-              "/images/gate-3139.jpg",
+              "/images/IMG_9651-qoso1lt7nrozj7wpqcc814w4zh0zl4ps9qr85zsed4.jpg",
               "/images/Residential-Steel-Gate-Frames-on-Wood-04-qpkcpnguf4rspu51goub3xixmouijo0fbhddkk34qg.jpg",
             ].map((src, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className="group overflow-hidden rounded-2xl shadow-lg">
@@ -128,7 +128,7 @@ export default function Gates() {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <img src="/images/aluminum-05.jpg" alt="" className="w-full h-full object-cover" />
+          <img src="/images/gate-06.jpg" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/90 to-blue-900/90" />
         <div className="relative max-w-3xl mx-auto px-4">

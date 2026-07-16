@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import { motion } from "framer-motion";
-import { Phone, Check, ArrowRight, Star, Shield, Users, Award, Quote, Trees, Lock, Grid3x3, Sparkles, Building2, House } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Phone, Check, ArrowRight, Star, Shield, Users, Award, Quote } from "lucide-react";
+import {
+  WoodPicketIcon, PrivacyBoardIcon, ChainLinkIcon, VinylPicketIcon,
+  AluminumIcon, CommercialIcon, ResidentialIcon, type FenceIcon,
+} from "../components/FenceIcons";
 
-const serviceIcons: Record<string, LucideIcon> = {
-  wood: Trees,
-  privacy: Lock,
-  chainlink: Grid3x3,
-  vinyl: Sparkles,
-  aluminum: Shield,
-  commercial: Building2,
-  residential: House,
+const serviceIcons: Record<string, FenceIcon> = {
+  wood: WoodPicketIcon,
+  privacy: PrivacyBoardIcon,
+  chainlink: ChainLinkIcon,
+  vinyl: VinylPicketIcon,
+  aluminum: AluminumIcon,
+  commercial: CommercialIcon,
+  residential: ResidentialIcon,
 };
 import { useState, useRef, useEffect } from "react";
 import CountUp from "react-countup";
@@ -519,7 +522,7 @@ export default function Home() {
                   onClick={() => setActiveService(service.id)}
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center gap-3 px-5 py-3.5 rounded-xl text-sm font-bold transition-all w-full text-left overflow-hidden ${
+                  className={`relative flex items-center gap-3 px-5 py-3.5 lg:flex-1 rounded-xl text-sm font-bold transition-all w-full text-left overflow-hidden ${
                     activeService === service.id
                       ? "bg-[#0f172a] text-white shadow-xl shadow-gray-900/20"
                       : "bg-gray-100 text-gray-500 hover:bg-gray-200"
@@ -533,7 +536,7 @@ export default function Home() {
                   )}
                   {(() => {
                     const Icon = serviceIcons[service.id];
-                    return Icon ? <Icon size={16} className={`shrink-0 ${activeService === service.id ? "text-cyan-400" : "text-gray-400"}`} /> : null;
+                    return Icon ? <Icon size={26} className={`shrink-0 ${activeService === service.id ? "text-cyan-400" : "text-gray-400"}`} /> : null;
                   })()}
                   <span className="uppercase text-xs tracking-widest">{service.label}</span>
                 </motion.button>
