@@ -21,17 +21,25 @@ No secrets or external services are required.
 
 | Script | Description |
 |---|---|
-| `npm run dev` | Start Vite dev server (port 3000) |
+| `npm run dev` | Start Vite dev server (port 3000) with Express API middleware |
 | `npm run build` | Type-check + production build to `dist/` |
-| `npm run preview` | Serve production build with SPA history fallback |
+| `npm start` | Production: Express server serves `dist/` + `/api/contact` |
 | `npm run thumbs` | Regenerate WebP/JPEG gallery thumbnails |
 | `npm run lint` | ESLint |
+
+## Server
+
+`server/app.mjs` — Express app with `/api/contact` endpoint (Titan SMTP, rate limiting, honeypot).  
+`server/index.mjs` — Production entry: serves `dist/` static files + mounts the API.  
+The API is also mounted directly into the Vite dev server via a plugin in `vite.config.ts`.
+
+Requires `TITAN_SMTP_PASS` secret to send emails (set in Replit Secrets).
 
 ## Deployment
 
 Configured in `.replit` for autoscale deployment:
 - **Build:** `npm ci && npm run build`
-- **Run:** `npm run preview` (serves `dist/` with SPA history fallback)
+- **Run:** `npm start` (Express serves `dist/` + `/api/contact`)
 
 ## User preferences
 

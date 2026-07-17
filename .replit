@@ -44,3 +44,7 @@ args = "npm run dev"
 
 [agent]
 expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 60000
