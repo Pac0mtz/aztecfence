@@ -1,15 +1,40 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import Seo, { SITE_URL } from "../components/Seo";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
+  // honeypot — bots fill this; humans don't see it
+  const [botcheck, setBotcheck] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...form, botcheck }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(data.message || "Something went wrong. Please call us at (847) 740-4655.");
+      }
+    } catch {
+      setError("Network error. Please call us at (847) 740-4655 or email sales@aztecfence.net.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -115,6 +140,23 @@ export default function Contact() {
                     <h2 className="text-2xl font-bold text-[#0f172a] mb-2">Request a Free Consultation</h2>
                     <p className="text-gray-500 text-sm mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
                     <form onSubmit={handleSubmit} className="space-y-5">
+                      {/* Honeypot — hidden from real users, catches bots */}
+                      <input
+                        type="checkbox"
+                        name="botcheck"
+                        className="hidden"
+                        style={{ display: "none" }}
+                        tabIndex={-1}
+                        autoComplete="off"
+                        checked={!!botcheck}
+                        onChange={(e) => setBotcheck(e.target.value)}
+                      />
+                      {error && (
+                        <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
+                          <AlertCircle size={18} className="shrink-0 mt-0.5" />
+                          <p className="text-sm">{error}</p>
+                        </div>
+                      )}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label htmlFor="contact-name" className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
@@ -149,9 +191,22 @@ export default function Contact() {
                         <label htmlFor="contact-message" className="block text-sm font-bold text-gray-700 mb-2">Message</label>
                         <textarea id="contact-message" name="message" rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50 resize-none" placeholder="Tell us about your project..." />
                       </div>
-                      <button type="submit" className="group w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-[1.02]">
-                        <Send size={18} />
-                        Submit Request
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="group w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 size={18} className="animate-spin" />
+                            Sending…
+                          </>
+                        ) : (
+                          <>
+                            <Send size={18} />
+                            Submit Request
+                          </>
+                        )}
                       </button>
                     </form>
                   </>

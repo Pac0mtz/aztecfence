@@ -20,12 +20,12 @@ externalPort = 3001
 [unitTest]
 language = "nodejs"
 
-# Production deployment: build the static SPA, then serve it with vite preview
-# (vite preview provides the SPA history-fallback BrowserRouter needs).
+# Production deployment: build the SPA, then serve it with the Express server
+# (serves dist/ with SPA history-fallback plus the /api/contact endpoint).
 [deployment]
 deploymentTarget = "autoscale"
 build = ["sh", "-c", "npm ci && npm run build"]
-run = ["sh", "-c", "npm run preview"]
+run = ["sh", "-c", "npm start"]
 
 [workflows]
 runButton = "Dev"

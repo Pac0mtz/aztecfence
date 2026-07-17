@@ -9,7 +9,8 @@
     "prebuild": "node scripts/generate-thumbs.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server/index.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -44,10 +45,12 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "express": "^5.2.1",
     "framer-motion": "^12.38.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
     "next-themes": "^0.4.6",
+    "nodemailer": "^9.0.3",
     "react": "^19.2.0",
     "react-countup": "^6.5.3",
     "react-day-picker": "^9.13.0",
