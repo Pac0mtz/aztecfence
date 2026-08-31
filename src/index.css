@@ -106,3 +106,246 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Mobile-first compact UX layer. Desktop/tablet layouts remain unchanged. */
+.mobile-cta {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 70;
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: 16px;
+  background: rgb(15 23 42 / 0.94);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 14px 38px rgb(15 23 42 / 0.28);
+}
+
+.mobile-cta a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 11px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.mobile-cta-call {
+  color: white;
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.mobile-cta-quote {
+  color: white;
+  background: #06b6d4;
+}
+
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 64px;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .mobile-compact {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  /* Header/nav: reclaim vertical space while keeping 44px tap targets. */
+  .mobile-compact nav [class~="h-20"] {
+    height: 4rem !important;
+  }
+
+  .mobile-compact nav img[class~="h-14"] {
+    height: 3rem !important;
+  }
+
+  .mobile-compact nav #mobile-menu > div {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .mobile-compact nav #mobile-menu a,
+  .mobile-compact nav #mobile-menu button {
+    min-height: 42px;
+  }
+
+  /* Global section rhythm: compact mobile, preserve desktop scale. */
+  .mobile-compact main [class~="py-20"] {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  .mobile-compact main [class~="py-16"] {
+    padding-top: 2.75rem !important;
+    padding-bottom: 2.75rem !important;
+  }
+
+  .mobile-compact main [class~="py-14"] {
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
+  }
+
+  .mobile-compact main [class~="mb-14"] {
+    margin-bottom: 2rem !important;
+  }
+
+  .mobile-compact main [class~="mb-12"] {
+    margin-bottom: 1.75rem !important;
+  }
+
+  .mobile-compact main [class~="mb-10"] {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .mobile-compact main [class~="gap-14"] {
+    gap: 2rem !important;
+  }
+
+  .mobile-compact main [class~="gap-8"] {
+    gap: 1.25rem !important;
+  }
+
+  .mobile-compact main [class~="gap-6"] {
+    gap: 0.875rem !important;
+  }
+
+  .mobile-compact main [class~="p-8"] {
+    padding: 1.125rem !important;
+  }
+
+  .mobile-compact main [class~="p-6"] {
+    padding: 1rem !important;
+  }
+
+  .mobile-compact main [class~="rounded-3xl"] {
+    border-radius: 1.1rem !important;
+  }
+
+  .mobile-compact main [class~="rounded-2xl"] {
+    border-radius: 0.9rem !important;
+  }
+
+  /* Page heroes: shorter, denser and easier to scan on a phone. */
+  .mobile-compact main > div > section:first-of-type {
+    min-height: 390px !important;
+    height: min(68vh, 520px) !important;
+  }
+
+  .mobile-compact main > div > section:first-of-type h1 {
+    font-size: clamp(2rem, 9vw, 2.65rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  .mobile-compact main > div > section:first-of-type p[class*="text-lg"] {
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .mobile-compact main > div > section:first-of-type [class~="mt-8"] {
+    margin-top: 1.25rem !important;
+  }
+
+  .mobile-compact main > div > section:first-of-type a[class*="px-8"] {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 0.7rem !important;
+    padding-bottom: 0.7rem !important;
+    font-size: 0.84rem !important;
+  }
+
+  /* Featured-project marquee: show more content above the fold. */
+  .mobile-compact .marquee-track {
+    gap: 0.75rem !important;
+    padding-left: 0.75rem !important;
+  }
+
+  .mobile-compact .marquee-track > a {
+    height: 220px !important;
+    border-radius: 0.85rem !important;
+  }
+
+  /* Reviews: viewport-aware cards instead of desktop-width cards. */
+  .mobile-compact .animate-marquee > div {
+    width: 84vw !important;
+    max-width: 340px;
+    margin-left: 0.45rem !important;
+    margin-right: 0.45rem !important;
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+  }
+
+  /* Stats: tighter but still readable. */
+  .mobile-compact main [class~="grid-cols-2"] [class*="text-5xl"] {
+    font-size: 2.35rem !important;
+  }
+
+  .mobile-compact main [class~="grid-cols-2"] svg[class*="mb-3"] {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 0.45rem !important;
+  }
+
+  /* Home service selector becomes a horizontal, thumb-friendly rail. */
+  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"] {
+    display: flex !important;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"] > button {
+    min-width: 138px;
+    width: auto !important;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 0.72rem 0.9rem !important;
+  }
+
+  /* Service/detail imagery should not dominate the viewport. */
+  .mobile-compact main img[class~="h-96"] {
+    height: 17rem !important;
+  }
+
+  .mobile-compact main img[class~="h-72"] {
+    height: 14rem !important;
+  }
+
+  /* Dense two-column galleries. */
+  .mobile-compact main [class~="grid-cols-2"][class*="md:grid-cols-3"] {
+    gap: 0.5rem !important;
+  }
+
+  /* Forms/buttons remain easy to tap without oversized vertical padding. */
+  .mobile-compact main input,
+  .mobile-compact main select,
+  .mobile-compact main textarea,
+  .mobile-compact main button {
+    font-size: 16px;
+  }
+
+  .mobile-compact footer {
+    padding-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-cta {
+    display: none !important;
+  }
+}
