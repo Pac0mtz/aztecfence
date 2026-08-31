@@ -19,6 +19,8 @@ const serviceIcons: Record<string, FenceIcon> = {
 import { useState, useRef, useEffect } from "react";
 import CountUp from "react-countup";
 
+type Slide = { src: string; alt: string; label?: string };
+
 const services = [
   {
     id: "wood",
@@ -26,6 +28,11 @@ const services = [
     title: "Wood Fences",
     subtitle: "Embrace the Natural Look",
     image: "/images/IMG_1111.jpg",
+    slides: [
+      { src: "/images/IMG_1111.jpg", alt: "Cedar wood picket fence", label: "Wood Picket" },
+      { src: "/images/Residential-wood-solid-privacy-fence-11.jpg", alt: "Wood solid privacy fence", label: "Solid Privacy" },
+      { src: "/images/Residential-wood-privacy-board-on-board-fence-07.jpg", alt: "Wood board-on-board fence", label: "Board on Board" },
+    ],
     description:
       "For a rustic, natural aesthetic that complements any landscape, choose our wood fences. They are durable and highly customizable, ideal for both privacy and decorative use. Wood fences offer a timeless appeal that enhances the beauty of your garden or yard. With a variety of wood types and finishes available, you can tailor your fence to fit your exact vision, creating a warm and inviting atmosphere around your home.",
     benefits: ["Achieve a natural, rustic look", "Customizable", "Provides robust privacy"],
@@ -171,6 +178,12 @@ function GoogleG({ size = 22 }: { size?: number }) {
   );
 }
 
+const gateSlides: Slide[] = [
+  { src: "/images/gate-3139.jpg", alt: "Custom aluminum driveway gate", label: "Custom Driveway Gate" },
+  { src: "/images/gate-05.jpg", alt: "Residential steel gate", label: "Residential Steel Gate" },
+  { src: "/images/gate-06.jpg", alt: "Ornamental custom gate", label: "Ornamental Gate" },
+];
+
 function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   return (
     <Link
@@ -193,10 +206,112 @@ function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   );
 }
 
+function PhotoSlider({
+  slides,
+  className = "",
+  imageClassName = "",
+  interval = 3800,
+}: {
+  slides: Slide[];
+  className?: string;
+  imageClassName?: string;
+  interval?: number;
+}) {
+  const [index, setIndex] = useState(0);
+  const paused = useRef(false);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const id = window.setInterval(() => {
+      if (!paused.current) setIndex((n) => (n + 1) % slides.length);
+    }, interval);
+    return () => window.clearInterval(id);
+  }, [slides.length, interval]);
+
+  const slide = slides[index] ?? slides[0];
+
+  return (
+    <div
+      className={`relative overflow-hidden ${className}`}
+      onMouseEnter={() => {
+        paused.current = true;
+      }}
+      onMouseLeave={() => {
+        paused.current = false;
+      }}
+    >
+      <div
+        className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
+        style={{ transform: `translateX(-${index * 100}%)` }}
+      >
+        {slides.map((s) => (
+          <div key={s.src} className="min-w-full h-full shrink-0">
+            <img src={s.src} alt={s.alt} className={`w-full h-full object-cover ${imageClassName}`} />
+          </div>
+        ))}
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+      {slide?.label && (
+        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+          <span className="inline-block px-4 py-2 bg-white/90 backdrop-blur-sm text-sm font-bold text-[#0f172a] rounded-full shadow-md">
+            {slide.label}
+          </span>
+          {slides.length > 1 && (
+            <div className="flex gap-1.5 pb-1">
+              {slides.map((s, i) => (
+                <button
+                  key={s.src}
+                  type="button"
+                  aria-label={`Show ${s.label ?? `image ${i + 1}`}`}
+                  onClick={() => setIndex(i)}
+                  className={`h-2 rounded-full transition-all ${
+                    i === index ? "w-6 bg-white" : "w-2 bg-white/50 hover:bg-white/80"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ImageCarousel() {
-  // Duplicate the list so the marquee can loop seamlessly (translateX -50% lands
-  // the second copy exactly where the first started).
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const velRef = useRef(0.55);
+  const dragRef = useRef<{ pointerId: number; startX: number; startScroll: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
   const loop = [...carouselImages, ...carouselImages];
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    const tick = () => {
+      const half = el.scrollWidth / 2;
+      if (half > 0 && !dragRef.current) {
+        el.scrollLeft += velRef.current;
+        if (el.scrollLeft >= half) el.scrollLeft -= half;
+        if (el.scrollLeft < 0) el.scrollLeft += half;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("wheel", onWheel);
+    };
+  }, []);
 
   return (
     <section className="bg-[#0f172a] py-14 overflow-hidden">
@@ -205,13 +320,57 @@ function ImageCarousel() {
           Featured <span className="text-cyan-400">Projects</span>
         </h2>
       </div>
-      {/* Auto-scrolling marquee — gentle constant pace, pauses on hover. */}
-      <div className="overflow-hidden">
-        <div className="marquee-track flex gap-4 w-max pl-4">
-          {loop.map((img, i) => (
-            <ProjectCard key={`${img.src}-${i}`} img={img} />
-          ))}
-        </div>
+      <div
+        ref={scrollerRef}
+        className="flex gap-4 overflow-x-auto scrollbar-hide pl-4 cursor-ew-resize"
+        onMouseLeave={() => {
+          velRef.current = 0.55;
+        }}
+        onMouseMove={(e) => {
+          if (dragRef.current) return;
+          const el = scrollerRef.current;
+          if (!el) return;
+          const x = (e.clientX - el.getBoundingClientRect().left) / el.clientWidth;
+          velRef.current = (x - 0.42) * 3.4;
+        }}
+        onPointerDown={(e) => {
+          const el = scrollerRef.current;
+          if (!el || e.pointerType === "touch") return;
+          dragRef.current = {
+            pointerId: e.pointerId,
+            startX: e.clientX,
+            startScroll: el.scrollLeft,
+            moved: false,
+          };
+          velRef.current = 0;
+          el.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={(e) => {
+          const el = scrollerRef.current;
+          const drag = dragRef.current;
+          if (!el || !drag || drag.pointerId !== e.pointerId) return;
+          const dx = e.clientX - drag.startX;
+          if (Math.abs(dx) > 6) drag.moved = true;
+          el.scrollLeft = drag.startScroll - dx;
+        }}
+        onPointerUp={(e) => {
+          const drag = dragRef.current;
+          if (drag?.moved) suppressClick.current = true;
+          dragRef.current = null;
+          if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+            e.currentTarget.releasePointerCapture(e.pointerId);
+          }
+        }}
+        onClickCapture={(e) => {
+          if (!suppressClick.current) return;
+          e.preventDefault();
+          e.stopPropagation();
+          suppressClick.current = false;
+        }}
+      >
+        {loop.map((img, i) => (
+          <ProjectCard key={`${img.src}-${i}`} img={img} />
+        ))}
       </div>
     </section>
   );
@@ -551,18 +710,16 @@ export default function Home() {
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="flex-1 flex flex-col md:flex-row gap-8 bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 shadow-xl shadow-gray-100/50 border border-gray-100"
             >
-              <div className="md:w-1/2 relative group overflow-hidden rounded-2xl">
-                <motion.img
-                  src={active.image}
-                  alt={active.title}
-                  className="w-full h-72 md:absolute md:inset-0 md:h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              <div className="md:w-1/2 relative group overflow-hidden rounded-2xl min-h-[18rem]">
+                <PhotoSlider
+                  slides={
+                    "slides" in active && active.slides
+                      ? active.slides
+                      : [{ src: active.image, alt: active.title, label: active.title }]
+                  }
+                  className="h-72 md:absolute md:inset-0 md:h-full"
+                  imageClassName="transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="inline-block px-4 py-2 bg-white/90 backdrop-blur-sm text-sm font-bold text-[#0f172a] rounded-full shadow-md">
-                    {active.title}
-                  </span>
-                </div>
               </div>
               <div className="md:w-1/2 flex flex-col justify-center">
                 <h3 className="text-3xl font-bold text-[#0f172a] mb-1">{active.title}</h3>
@@ -666,10 +823,9 @@ export default function Home() {
             >
               <div className="relative group">
                 <div className="absolute -inset-4 bg-gradient-to-r from-cyan-200 to-blue-200 rounded-3xl blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500" />
-                <img
-                  src="/images/gate-3139.jpg"
-                  alt="Custom gates"
-                  className="relative w-full h-96 object-cover rounded-3xl shadow-2xl shadow-gray-300/40 transition-transform duration-700 group-hover:scale-[1.02]"
+                <PhotoSlider
+                  slides={gateSlides}
+                  className="relative h-96 rounded-3xl shadow-2xl shadow-gray-300/40"
                 />
                 <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 hidden md:block">
                   <div className="flex items-center gap-3">
