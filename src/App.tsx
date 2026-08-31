@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
+import { Phone } from "lucide-react";
 import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -20,7 +21,7 @@ import Terms from "./pages/Terms";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="mobile-compact min-h-screen bg-white flex flex-col">
       <ScrollToTop />
       <TopBar />
       <Navbar />
@@ -44,6 +45,16 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+
+      <div className="mobile-cta lg:hidden" aria-label="Quick contact actions">
+        <a href="tel:8477404655" className="mobile-cta-call">
+          <Phone size={17} aria-hidden="true" />
+          Call
+        </a>
+        <Link to="/contact/" className="mobile-cta-quote">
+          Free Quote
+        </Link>
+      </div>
     </div>
   );
 }
