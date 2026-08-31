@@ -240,13 +240,14 @@ function PhotoSlider({
         paused.current = false;
       }}
     >
-      <div
-        className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
-        style={{ transform: `translateX(-${index * 100}%)` }}
-      >
-        {slides.map((s) => (
-          <div key={s.src} className="min-w-full h-full shrink-0">
-            <img src={s.src} alt={s.alt} className={`w-full h-full object-cover ${imageClassName}`} />
+      <div className="absolute inset-0">
+        {slides.map((s, i) => (
+          <div
+            key={s.src}
+            className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
+            style={{ transform: `translateX(${(i - index) * 100}%)` }}
+          >
+            <img src={s.src} alt={s.alt} className={`h-full w-full object-cover ${imageClassName}`} />
           </div>
         ))}
       </div>
@@ -718,7 +719,6 @@ export default function Home() {
                       : [{ src: active.image, alt: active.title, label: active.title }]
                   }
                   className="h-72 md:absolute md:inset-0 md:h-full"
-                  imageClassName="transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               <div className="md:w-1/2 flex flex-col justify-center">
