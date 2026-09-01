@@ -111,6 +111,14 @@ function applyMeta(html, pathname, meta) {
     /<meta property="og:url" content="[^"]*"/,
     `<meta property="og:url" content="${canonical}"`,
   );
+
+  const extra =
+    pathname === "/privacy-policy/"
+      ? `<p>Aztec Fence Company collects name, email, phone, and project details from our quote form so we can contact you. We use Google Ads tags to measure quote requests and calls. We do not sell personal information. Email sales@aztecfence.net or call (847) 740-4655 with privacy questions.</p>`
+      : `<p>${escapeAttr(meta.description)}</p>`;
+
+  const crawler = `<div id="root"><main><h1>${meta.title}</h1>${extra}<p>Aztec Fence Company, 11 N Fairfield Rd, Round Lake, IL 60073. <a href="tel:8477404655">(847) 740-4655</a>. <a href="/contact/">Free quote</a>. <a href="/privacy-policy/">Privacy Policy</a>.</p></main></div>`;
+  out = out.replace(/<div id="root"><\/div>/, crawler);
   return out;
 }
 
