@@ -5,7 +5,8 @@ const app = express();
 
 app.use((req, res, next) => {
   const host = (req.headers.host || "").split(":")[0];
-  if (host === "www.aztecfence.net") {
+  // Keep /api on www so quote POSTs are not turned into GETs by a 301.
+  if (host === "www.aztecfence.net" && !req.path.startsWith("/api/")) {
     return res.redirect(301, `https://aztecfence.net${req.originalUrl}`);
   }
   next();
@@ -75,6 +76,8 @@ app.post("/api/contact", async (req, res) => {
       return res.status(429).json({ success: false, message: "Too many requests. Please try again later or call us at (847) 740-4655." });
     }
 
+    console.log(`contact_submit host=${req.headers.host} ip=${ip} name=${String(name).slice(0, 80)} email=${email}`);
+
     const transport = makeTransport();
     if (!transport) {
       console.error("TITAN_SMTP_PASS is not set — cannot send contact email.");
@@ -115,6 +118,7 @@ app.post("/api/contact", async (req, res) => {
       ].join("\n"),
     });
 
+    console.log(`contact_sent email=${email}`);
     res.json({ success: true });
   } catch (err) {
     console.error("Contact form error:", err);
