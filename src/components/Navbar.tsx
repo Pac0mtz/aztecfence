@@ -141,7 +141,7 @@ export default function Navbar() {
             to="/contact/"
             className="hidden lg:inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-105"
           >
-            FREE CONSULTATION
+            FREE QUOTE
           </Link>
 
           {/* Mobile Toggle */}
@@ -225,7 +225,7 @@ export default function Navbar() {
                 className="block mt-3 text-center px-5 py-3 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-sm font-bold rounded-full"
                 onClick={() => setMobileOpen(false)}
               >
-                FREE CONSULTATION
+                FREE QUOTE
               </Link>
             </div>
           </motion.div>

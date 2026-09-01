@@ -40,7 +40,7 @@ export default function Privacy() {
               },
               {
                 title: "2. Information we collect",
-                text: "When you use our contact form we collect your name, email address, phone number, the fencing service you selected, and any message you send. We also receive the phone number when you tap ùCall.ù Our servers may log technical data such as IP address, browser type, and the page you visited. If you click a Google Ad, Google may pass click identifiers (such as gclid) so we can measure which ads led to a quote request or call.",
+                text: "When you use our quote form we collect your name, email address, phone number, property address, the fencing service you selected, any message you send, and optional photos of the job site. We also receive the phone number when you tap Call. Our servers may log technical data such as IP address, browser type, and the page you visited. If you click a Google Ad, Google may pass click identifiers (such as gclid) so we can measure which ads led to a quote request or call.",
               },
               {
                 title: "3. How we use information",
