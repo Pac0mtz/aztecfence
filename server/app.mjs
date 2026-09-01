@@ -2,6 +2,15 @@ import express from "express";
 import nodemailer from "nodemailer";
 
 const app = express();
+
+app.use((req, res, next) => {
+  const host = (req.headers.host || "").split(":")[0];
+  if (host === "www.aztecfence.net") {
+    return res.redirect(301, `https://aztecfence.net${req.originalUrl}`);
+  }
+  next();
+});
+
 app.use(express.json({ limit: "50kb" }));
 
 // --- basic in-memory rate limiting: max 5 submissions per IP per 15 min ---
@@ -46,7 +55,7 @@ const SERVICE_LABELS = {
 
 app.post("/api/contact", async (req, res) => {
   try {
-    const { name, email, phone, service, message, botcheck } = req.body || {};
+    const { name, email, phone, service, message, botcheck, ads } = req.body || {};
 
     // Honeypot: silently accept so bots think they succeeded
     if (botcheck) return res.json({ success: true });
@@ -73,6 +82,22 @@ app.post("/api/contact", async (req, res) => {
     }
 
     const serviceLabel = SERVICE_LABELS[service] || service || "Not specified";
+    const adsLines = ads && typeof ads === "object"
+      ? [
+          "",
+          "Ad attribution:",
+          ads.gclid ? `GCLID: ${String(ads.gclid).slice(0, 200)}` : null,
+          ads.gbraid ? `GBRAID: ${String(ads.gbraid).slice(0, 200)}` : null,
+          ads.wbraid ? `WBRAID: ${String(ads.wbraid).slice(0, 200)}` : null,
+          ads.utm_source ? `utm_source: ${String(ads.utm_source).slice(0, 200)}` : null,
+          ads.utm_medium ? `utm_medium: ${String(ads.utm_medium).slice(0, 200)}` : null,
+          ads.utm_campaign ? `utm_campaign: ${String(ads.utm_campaign).slice(0, 200)}` : null,
+          ads.utm_term ? `utm_term: ${String(ads.utm_term).slice(0, 200)}` : null,
+          ads.utm_content ? `utm_content: ${String(ads.utm_content).slice(0, 200)}` : null,
+          ads.landing ? `Landing page: ${String(ads.landing).slice(0, 200)}` : null,
+        ].filter(Boolean)
+      : [];
+
     await transport.sendMail({
       from: '"Aztec Fence Website" <sales@aztecfence.net>',
       to: "sales@aztecfence.net",
@@ -86,6 +111,7 @@ app.post("/api/contact", async (req, res) => {
         "",
         "Message:",
         message || "No message provided",
+        ...adsLines,
       ].join("\n"),
     });
 

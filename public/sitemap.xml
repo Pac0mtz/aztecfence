@@ -74,8 +74,14 @@
   </url>
   <url>
     <loc>https://aztecfence.net/contact/</loc>
-    <lastmod>2026-06-26</lastmod>
+    <lastmod>2026-09-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aztecfence.net/privacy-policy/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>

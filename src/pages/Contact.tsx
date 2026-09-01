@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import Seo, { SITE_URL } from "../components/Seo";
+import { getAdsParams, saveLeadUserData } from "../lib/ads";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -20,13 +22,19 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...form, botcheck }),
+        body: JSON.stringify({ ...form, botcheck, ads: getAdsParams() }),
       });
 
       const data = await res.json();
 
       if (data.success) {
-        setSubmitted(true);
+        if (botcheck) {
+          setSubmitted(true);
+          return;
+        }
+        saveLeadUserData({ email: form.email, phone: form.phone });
+        window.location.assign("/thank-you/");
+        return;
       } else {
         setError(data.message || "Something went wrong. Please call us at (847) 740-4655.");
       }
@@ -191,6 +199,13 @@ export default function Contact() {
                         <label htmlFor="contact-message" className="block text-sm font-bold text-gray-700 mb-2">Message</label>
                         <textarea id="contact-message" name="message" rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-gray-50/50 resize-none" placeholder="Tell us about your project..." />
                       </div>
+                      <p className="text-xs text-gray-500">
+                        By submitting, you agree to our{" "}
+                        <Link to="/privacy-policy/" className="text-cyan-700 underline hover:text-cyan-600">
+                          Privacy Policy
+                        </Link>{" "}
+                        and consent to be contacted about your fencing project.
+                      </p>
                       <button
                         type="submit"
                         disabled={loading}

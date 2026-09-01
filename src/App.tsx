@@ -18,6 +18,8 @@ import WoodPicketFencing from "./pages/WoodPicketFencing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import ThankYou from "./pages/ThankYou";
 
 export default function App() {
   return (
@@ -42,6 +44,8 @@ export default function App() {
           <Route path="/about-us/" element={<About />} />
           <Route path="/contact/" element={<Contact />} />
           <Route path="/terms-and-conditions/" element={<Terms />} />
+          <Route path="/privacy-policy/" element={<Privacy />} />
+          <Route path="/thank-you/" element={<ThankYou />} />
         </Routes>
       </main>
       <Footer />

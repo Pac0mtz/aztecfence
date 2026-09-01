@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
 Disallow: /terms-and-conditions/
+Disallow: /thank-you/
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
 
 Sitemap: https://aztecfence.net/sitemap.xml
