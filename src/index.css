@@ -235,12 +235,6 @@
     border-radius: 0.9rem !important;
   }
 
-  /* Quote page: it contains a full form, not a fixed-height hero. */
-  .mobile-compact main > div > .quote-contact-section {
-    min-height: 0 !important;
-    height: auto !important;
-  }
-
   /* Page heroes: shorter, denser and easier to scan on a phone. */
   .mobile-compact main > div > section:first-of-type {
     min-height: 390px !important;
@@ -267,6 +261,13 @@
     padding-top: 0.7rem !important;
     padding-bottom: 0.7rem !important;
     font-size: 0.84rem !important;
+  }
+
+  /* The quote page contains a full form, not a fixed-height hero. Keep this
+     after the generic hero rule and intentionally more specific. */
+  body .mobile-compact main .quote-contact-section {
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   /* Featured-project marquee: show more content above the fold. */
