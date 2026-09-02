@@ -183,7 +183,7 @@ export default function Residential() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.55 }}
-            className="relative w-full min-h-[21rem] sm:min-h-[28rem] overflow-hidden rounded-3xl shadow-2xl shadow-slate-900/15"
+            className="relative w-full h-[21rem] sm:h-[28rem] overflow-hidden rounded-3xl shadow-2xl shadow-slate-900/15"
           >
             <ProjectImage
               src="/images/Residential-wood-solid-privacy-fence-11.jpg"
@@ -227,7 +227,7 @@ export default function Residential() {
                     transition={{ duration: 0.5 }}
                     className="md:col-span-2 w-full"
                   >
-                    <Link to={option.href} className="group relative block min-h-[16rem] overflow-hidden rounded-3xl text-white">
+                    <Link to={option.href} className="group relative block h-[16rem] sm:h-[18rem] overflow-hidden rounded-3xl text-white">
                       <ProjectImage
                         src="/images/Residential-vinyl-privacy-fence-10.jpg"
                         alt="Residential privacy fence"
