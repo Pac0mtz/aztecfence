@@ -217,7 +217,7 @@ export default function Commercial() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.55 }}
-            className="relative w-full min-h-[21rem] sm:min-h-[28rem] overflow-hidden rounded-3xl shadow-2xl shadow-slate-900/15"
+            className="relative w-full h-[21rem] sm:h-[28rem] overflow-hidden rounded-3xl shadow-2xl shadow-slate-900/15"
           >
             <ProjectImage
               src="/images/Commercial-Fences-05-2.jpg"
@@ -283,7 +283,7 @@ export default function Commercial() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
-              className="relative min-h-[24rem] overflow-hidden rounded-3xl text-white"
+              className="relative h-[24rem] sm:h-[28rem] overflow-hidden rounded-3xl text-white"
             >
               <ProjectImage
                 src="/images/commercial-29-2.jpg"
