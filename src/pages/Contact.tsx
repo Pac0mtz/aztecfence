@@ -108,7 +108,7 @@ export default function Contact() {
             )}
 
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className="sm:col-span-2">
+              <div className="col-span-2">
                 <label htmlFor="contact-name" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Full name *</label>
                 <input id="contact-name" name="name" autoComplete="name" required type="text" className={inputClass} placeholder="Jane Smith" />
               </div>
