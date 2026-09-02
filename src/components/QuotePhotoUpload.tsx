@@ -41,8 +41,8 @@ export default function QuotePhotoUpload() {
   }
 
   return (
-    <div className="space-y-2">
-      <label htmlFor={inputId} className="block text-sm font-bold text-gray-700">
+    <div className="space-y-1.5 sm:space-y-2">
+      <label htmlFor={inputId} className="block text-[13px] sm:text-sm font-bold text-gray-700">
         Photos of the property <span className="font-normal text-gray-500">(optional)</span>
       </label>
       <p className="text-xs text-gray-500">
@@ -59,9 +59,9 @@ export default function QuotePhotoUpload() {
       />
       <label
         htmlFor={inputId}
-        className="flex flex-col items-center justify-center gap-2 cursor-pointer rounded-2xl border-2 border-dashed border-cyan-300 bg-cyan-50/50 px-4 py-8 text-center hover:bg-cyan-50 hover:border-cyan-400 transition-colors"
+        className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 cursor-pointer rounded-xl sm:rounded-2xl border-2 border-dashed border-cyan-300 bg-cyan-50/50 px-4 py-5 sm:py-7 text-center hover:bg-cyan-50 hover:border-cyan-400 transition-colors"
       >
-        <Camera size={28} className="text-cyan-600" />
+        <Camera size={24} className="text-cyan-600 shrink-0" />
         <span className="font-bold text-[#0f172a]">Add photos or take a picture</span>
         {previews.length > 0 && (
           <span className="text-sm text-cyan-700">

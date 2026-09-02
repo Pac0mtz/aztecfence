@@ -7,7 +7,7 @@ import QuotePhotoUpload from "../components/QuotePhotoUpload";
 import { getAdsParams, saveLeadUserData } from "../lib/ads";
 
 const inputClass =
-  "w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-white";
+  "w-full min-w-0 px-3.5 py-3 sm:px-4 sm:py-3.5 rounded-lg sm:rounded-xl border border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 outline-none transition-all bg-white text-base";
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
@@ -64,20 +64,20 @@ export default function Contact() {
         }}
       />
 
-      <section className="relative min-h-[calc(100vh-5rem)] text-white">
+      <section className="relative text-white">
         <div className="absolute inset-0">
           <img src="/images/aluminum-21.jpg" alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-[#0f172a]/88" />
         </div>
 
-        <div className="relative max-w-3xl mx-auto px-4 py-8 md:py-12">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
-            <p className="text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-2">Free, no-obligation</p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3">Get Your Quote</h1>
-            <p className="text-gray-300 text-base md:text-lg">
+        <div className="relative max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-8 md:py-12">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 sm:mb-6">
+            <p className="text-cyan-400 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-1.5 sm:mb-2">Free, no-obligation</p>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 leading-tight">Get Your Quote</h1>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto">
               Tell us about the job and add photos of the yard. We typically follow up within one business day.
             </p>
-            <a href="tel:8477404655" className="inline-flex items-center gap-2 mt-4 text-cyan-300 font-bold hover:text-white">
+            <a href="tel:8477404655" className="inline-flex items-center gap-2 mt-3 sm:mt-4 text-cyan-300 font-bold hover:text-white">
               <Phone size={18} /> (847) 740-4655
             </a>
           </motion.div>
@@ -87,7 +87,7 @@ export default function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             onSubmit={handleSubmit}
-            className="bg-white text-[#0f172a] rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl space-y-5"
+            className="bg-white text-[#0f172a] rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-10 shadow-2xl space-y-4 sm:space-y-5"
           >
             <input
               type="checkbox"
@@ -107,23 +107,23 @@ export default function Contact() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div className="sm:col-span-2">
-                <label htmlFor="contact-name" className="block text-sm font-bold mb-2">Full name *</label>
+                <label htmlFor="contact-name" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Full name *</label>
                 <input id="contact-name" name="name" autoComplete="name" required type="text" className={inputClass} placeholder="Jane Smith" />
               </div>
               <div>
-                <label htmlFor="contact-phone" className="block text-sm font-bold mb-2">Phone *</label>
+                <label htmlFor="contact-phone" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Phone *</label>
                 <input id="contact-phone" name="phone" autoComplete="tel" required type="tel" className={inputClass} placeholder="(847) 740-4655" />
               </div>
               <div>
-                <label htmlFor="contact-email" className="block text-sm font-bold mb-2">Email *</label>
+                <label htmlFor="contact-email" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Email *</label>
                 <input id="contact-email" name="email" autoComplete="email" required type="email" className={inputClass} placeholder="you@email.com" />
               </div>
             </div>
 
             <div>
-              <label htmlFor="contact-address" className="block text-sm font-bold mb-2">Property address *</label>
+              <label htmlFor="contact-address" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Property address *</label>
               <input
                 id="contact-address"
                 name="address"
@@ -135,9 +135,9 @@ export default function Contact() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label htmlFor="contact-service" className="block text-sm font-bold mb-2">Fence type *</label>
+                <label htmlFor="contact-service" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Fence type *</label>
                 <select id="contact-service" name="service" required className={inputClass}>
                   <option value="">Select a style</option>
                   <option value="wood">Wood / privacy wood</option>
@@ -151,17 +151,17 @@ export default function Contact() {
                 </select>
               </div>
               <div>
-                <label htmlFor="contact-length" className="block text-sm font-bold mb-2">Approx. length</label>
+                <label htmlFor="contact-length" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Approx. length</label>
                 <input id="contact-length" name="length" type="text" className={inputClass} placeholder="e.g. 120 ft or 3 sides of yard" />
               </div>
             </div>
 
             <div>
-              <label htmlFor="contact-message" className="block text-sm font-bold mb-2">Project details</label>
+              <label htmlFor="contact-message" className="block text-[13px] sm:text-sm font-bold mb-1.5 sm:mb-2">Project details</label>
               <textarea
                 id="contact-message"
                 name="message"
-                rows={4}
+                rows={3}
                 className={`${inputClass} resize-none`}
                 placeholder="Height, gates, replacing an old fence, pool code, dog, slope…"
               />
@@ -180,7 +180,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
+              className="w-full flex items-center justify-center gap-2 px-5 py-3.5 sm:px-6 sm:py-4 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
             >
               {loading ? (
                 <>

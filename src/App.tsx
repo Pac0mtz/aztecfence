@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { Phone } from "lucide-react";
 import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
@@ -22,6 +22,9 @@ import Privacy from "./pages/Privacy";
 import ThankYou from "./pages/ThankYou";
 
 export default function App() {
+  const { pathname } = useLocation();
+  const showMobileCta = pathname !== "/contact/";
+
   return (
     <div className="mobile-compact min-h-screen bg-white flex flex-col">
       <ScrollToTop />
@@ -50,7 +53,7 @@ export default function App() {
       </main>
       <Footer />
 
-      <div className="mobile-cta lg:hidden" aria-label="Quick contact actions">
+      {showMobileCta && <div className="mobile-cta lg:hidden" aria-label="Quick contact actions">
         <a href="tel:8477404655" className="mobile-cta-call">
           <Phone size={17} aria-hidden="true" />
           Call
@@ -58,7 +61,7 @@ export default function App() {
         <Link to="/contact/" className="mobile-cta-quote">
           Free Quote
         </Link>
-      </div>
+      </div>}
     </div>
   );
 }

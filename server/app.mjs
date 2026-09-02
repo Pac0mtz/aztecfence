@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import nodemailer from "nodemailer";
+import sharp from "sharp";
 
 const app = express();
 
@@ -109,14 +110,15 @@ function row(label, valueHtml) {
   </tr>`;
 }
 
-function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, message, ads, photoCount }) {
+function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, message, ads, photoCids }) {
+  const photoCount = photoCids.length;
   const n = escapeHtml(name);
   const tel = String(phone).replace(/\D/g, "");
   const photoHtml = photoCount
     ? `<tr><td colspan="2" style="padding:22px 0 0;">
         <p style="margin:0 0 12px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#0891b2;font-weight:700;">Job photos</p>
-        ${Array.from({ length: photoCount }, (_, i) =>
-          `<img src="cid:fencephoto${i}" alt="Quote photo ${i + 1}" width="520" style="max-width:100%;width:100%;height:auto;display:block;border-radius:10px;margin-bottom:12px;border:1px solid #e2e8f0;" />`,
+        ${photoCids.map((cid, i) =>
+          `<img src="cid:${cid}" alt="Quote photo ${i + 1}" width="520" style="max-width:520px;width:100%;height:auto;display:block;border-radius:10px;margin:0 0 12px;border:1px solid #e2e8f0;" />`,
         ).join("")}
       </td></tr>`
     : "";
@@ -204,16 +206,26 @@ app.post("/api/contact", maybeUploadPhotos, async (req, res) => {
     }
 
     const serviceLabel = SERVICE_LABELS[service] || service || "Not specified";
-    const attachments = files.map((file, i) => ({
-      filename: sanitizeFilename(file.originalname),
-      content: file.buffer,
-      contentType: file.mimetype,
-      cid: `fencephoto${i}`,
-      contentDisposition: "inline",
+    const messageId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const attachments = await Promise.all(files.map(async (file, i) => {
+      const jpeg = await sharp(file.buffer, { failOn: "none" })
+        .rotate()
+        .resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true })
+        .jpeg({ quality: 84, mozjpeg: true })
+        .toBuffer();
+      const baseName = sanitizeFilename(file.originalname).replace(/\.[^.]+$/, "") || `quote-photo-${i + 1}`;
+      return {
+        filename: `${baseName}.jpg`,
+        content: jpeg,
+        contentType: "image/jpeg",
+        cid: `fencephoto-${messageId}-${i}@aztecfence.net`,
+        contentDisposition: "inline",
+      };
     }));
+    const photoCids = attachments.map((attachment) => attachment.cid);
 
     const html = buildQuoteHtml({
-      name, email, phone, address, serviceLabel, length, message, ads, photoCount: files.length,
+      name, email, phone, address, serviceLabel, length, message, ads, photoCids,
     });
 
     const text = [
