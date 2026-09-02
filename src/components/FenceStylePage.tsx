@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import {
   Check, ArrowRight, Phone, Shield, Award, Clock, DollarSign,
-  Star, ChevronRight, PencilRuler, HardHat, ClipboardCheck, Sparkles,
+  Star, ChevronRight, PencilRuler, HardHat, ClipboardCheck, Sparkles, ArrowUpRight,
 } from "lucide-react";
 import Seo, { SITE_URL } from "./Seo";
 
@@ -40,6 +40,41 @@ const DEFAULT_FEATURES: Feature[] = [
   { icon: DollarSign, title: "Free, Honest Quotes", text: "Transparent, itemized pricing with options for every budget — no hidden fees, ever." },
 ];
 
+function optimizedWebp(src: string, width: 640 | 1280) {
+  return src
+    .replace("/images/", "/images/optimized/")
+    .replace(/\.jpe?g$/i, `-${width}.webp`);
+}
+
+function FenceImage({
+  src,
+  alt,
+  className,
+  loading = "lazy",
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+  loading?: "lazy" | "eager";
+  priority?: boolean;
+}) {
+  return (
+    <picture className="block h-full w-full">
+      <source media="(max-width: 767px)" srcSet={optimizedWebp(src, 640)} type="image/webp" />
+      <source srcSet={optimizedWebp(src, 1280)} type="image/webp" />
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        loading={loading}
+        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+      />
+    </picture>
+  );
+}
+
 const PROCESS = [
   { icon: PencilRuler, step: "01", title: "Free Consultation", text: "We visit your property, listen to your goals, and recommend the right style and layout." },
   { icon: ClipboardCheck, step: "02", title: "Custom Quote", text: "You receive a clear, itemized quote with transparent material and design options." },
@@ -55,6 +90,7 @@ export default function FenceStylePage({
   // isn't repeated on the page. Falls back gracefully for short galleries.
   const introImage = galleryImages.find((g) => g !== heroImage) ?? galleryImages[0] ?? heroImage;
   const ctaImage = galleryImages.find((g) => g !== heroImage && g !== introImage) ?? heroImage;
+  const detailImage = galleryImages.find((g) => g !== heroImage && g !== introImage && g !== ctaImage) ?? introImage;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -97,10 +133,16 @@ export default function FenceStylePage({
       />
       {/* Hero */}
       <section className="relative h-[62vh] min-h-[460px] text-white overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt={`${title} fence installation by Aztec Fence in Northern Illinois`} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-[#0f172a]/85 to-[#0f172a]/30" />
-        </div>
+        <motion.div
+          initial={{ scale: 1.09 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0"
+        >
+          <FenceImage src={heroImage} alt={`${title} fence installation by Aztec Fence in Northern Illinois`} className="w-full h-full object-cover" loading="eager" priority />
+        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-[#0f172a]/85 to-[#0f172a]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/60 via-transparent to-transparent" />
         <div className="relative h-full flex items-center">
           <div className="max-w-7xl mx-auto px-4 w-full">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -153,9 +195,30 @@ export default function FenceStylePage({
               </Link>
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="md:w-1/2">
-              <div className="relative group overflow-hidden rounded-3xl shadow-2xl shadow-gray-200/50">
-                <img src={introImage} alt={`${title} fence by Aztec Fence`} className="w-full h-96 object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative h-[25rem] sm:h-[31rem] md:h-[34rem] pt-3 pr-3 sm:pt-5 sm:pr-5">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-x-0 top-0 h-[88%] overflow-hidden rounded-[1.75rem] shadow-2xl shadow-slate-900/20"
+                >
+                  <FenceImage src={introImage} alt={`${title} fence by Aztec Fence`} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/55 via-transparent to-transparent" />
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -24, y: 20, rotate: -4 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0, rotate: -2 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute bottom-0 left-0 w-[48%] h-[38%] overflow-hidden rounded-2xl border-4 border-white shadow-xl"
+                >
+                  <FenceImage src={detailImage} alt={`${title} fence detail`} className="w-full h-full object-cover" />
+                </motion.div>
+                <div className="absolute right-0 bottom-[4%] rounded-2xl bg-[#0f172a] px-4 py-3 text-white shadow-xl">
+                  <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.18em]">Aztec craftsmanship</p>
+                  <p className="mt-1 text-sm font-bold">Built for Illinois weather</p>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -197,28 +260,24 @@ export default function FenceStylePage({
             {galleryImages.map((src, idx) => (
               <motion.div
                 key={src + idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: Math.min(idx * 0.06, 0.4) }}
-                className="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg shadow-gray-200/40"
+                initial={{ opacity: 0, y: 28, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.18 }}
+                transition={{ duration: 0.5, delay: Math.min(idx * 0.05, 0.35), ease: [0.22, 1, 0.36, 1] }}
+                className={`group relative overflow-hidden rounded-2xl shadow-lg shadow-gray-200/40 ${
+                  idx === 0
+                    ? "col-span-2 aspect-[16/10] md:row-span-2 md:aspect-auto"
+                    : "aspect-[4/5] md:aspect-[4/3]"
+                }`}
               >
-                <picture className="block w-full h-full">
-                  <source srcSet={src.replace("/images/", "/images/thumbs/").replace(/\.jpe?g$/i, ".webp")} type="image/webp" />
-                  <img
-                    src={src.replace("/images/", "/images/thumbs/")}
-                    alt={`${title} fence installation in Northern Illinois — Aztec Fence project ${idx + 1}`}
-                    loading="lazy"
-                    decoding="async"
-                    width="640"
-                    height="480"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                </picture>
-                {/* Hover gradient overlay (now correctly clipped to the card) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                  <span className="text-white text-sm font-semibold">{title} Fence</span>
+                <FenceImage
+                  src={src}
+                  alt={`${title} fence installation in Northern Illinois — Aztec Fence project ${idx + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-0 sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 transition-all duration-300">
+                  <span className="inline-flex items-center gap-1.5 text-white text-xs sm:text-sm font-semibold">{title} Fence <ArrowUpRight size={15} /></span>
                 </div>
                 <div className="absolute inset-0 rounded-2xl ring-2 ring-inset ring-cyan-400/0 group-hover:ring-cyan-400/60 transition-all duration-300" />
               </motion.div>
@@ -278,7 +337,7 @@ export default function FenceStylePage({
       {/* CTA */}
       <section className="py-20 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-15">
-          <img src={ctaImage} alt="" aria-hidden="true" className="w-full h-full object-cover" />
+          <FenceImage src={ctaImage} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/90 to-blue-900/90" />
         <div className="relative max-w-3xl mx-auto px-4">

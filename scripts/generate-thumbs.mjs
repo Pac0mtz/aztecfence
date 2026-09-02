@@ -12,9 +12,11 @@ import path from "node:path";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const imagesDir = path.join(root, "public", "images");
 const thumbsDir = path.join(imagesDir, "thumbs");
+const optimizedDir = path.join(imagesDir, "optimized");
 const MAX = 640;
+const RESPONSIVE_WIDTHS = [640, 1280];
 
-await mkdir(thumbsDir, { recursive: true });
+await Promise.all([mkdir(thumbsDir, { recursive: true }), mkdir(optimizedDir, { recursive: true })]);
 
 const entries = await readdir(imagesDir, { withFileTypes: true });
 const files = entries.filter((d) => d.isFile() && /\.jpe?g$/i.test(d.name)).map((d) => d.name);
@@ -22,6 +24,7 @@ const files = entries.filter((d) => d.isFile() && /\.jpe?g$/i.test(d.name)).map(
 let count = 0;
 let webpBytes = 0;
 let jpgBytes = 0;
+let responsiveWebpBytes = 0;
 
 for (const name of files) {
   const input = path.join(imagesDir, name);
@@ -41,9 +44,20 @@ for (const name of files) {
 
   webpBytes += (await stat(webpOut)).size;
   jpgBytes += (await stat(jpgOut)).size;
+
+  for (const width of RESPONSIVE_WIDTHS) {
+    const responsiveOut = path.join(optimizedDir, `${base}-${width}.webp`);
+    await sharp(input)
+      .rotate()
+      .resize({ width, withoutEnlargement: true })
+      .webp({ quality: width === 640 ? 74 : 78, effort: 5 })
+      .toFile(responsiveOut);
+    responsiveWebpBytes += (await stat(responsiveOut)).size;
+  }
   count++;
 }
 
 const mb = (b) => (b / 1024 / 1024).toFixed(1);
 console.log(`Generated ${count} thumbnails -> ${thumbsDir}`);
-console.log(`  WebP total: ${mb(webpBytes)} MB  |  JPEG fallback total: ${mb(jpgBytes)} MB`);
+console.log(`  Gallery WebP: ${mb(webpBytes)} MB  |  JPEG fallback: ${mb(jpgBytes)} MB`);
+console.log(`  Responsive WebP (640/1280): ${mb(responsiveWebpBytes)} MB -> ${optimizedDir}`);
