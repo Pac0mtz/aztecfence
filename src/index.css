@@ -235,11 +235,8 @@
     border-radius: 0.9rem !important;
   }
 
-  /* Page heroes: shorter, denser and easier to scan on a phone. */
-  .mobile-compact main > div > section:first-of-type {
-    min-height: 390px !important;
-    height: min(68vh, 520px) !important;
-  }
+  /* Do not impose a height on every page's first section. Long-form pages
+     such as the quote form must remain in normal document flow. */
 
   .mobile-compact main > div > section:first-of-type h1 {
     font-size: clamp(2rem, 9vw, 2.65rem) !important;
