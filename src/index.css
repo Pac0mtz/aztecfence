@@ -235,6 +235,12 @@
     border-radius: 0.9rem !important;
   }
 
+  /* Quote page: it contains a full form, not a fixed-height hero. */
+  .mobile-compact main > div > .quote-contact-section {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
   /* Page heroes: shorter, denser and easier to scan on a phone. */
   .mobile-compact main > div > section:first-of-type {
     min-height: 390px !important;

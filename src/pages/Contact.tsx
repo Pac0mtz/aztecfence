@@ -64,14 +64,15 @@ export default function Contact() {
         }}
       />
 
-      <section className="relative text-white">
+      <section className="quote-contact-section relative text-white overflow-hidden">
         <div className="absolute inset-0">
           <img src="/images/aluminum-21.jpg" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-[#0f172a]/88" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#061424]/72 via-[#0f172a]/84 to-[#0f172a]/96" />
+          <div className="absolute inset-x-0 top-0 h-[30rem] bg-gradient-to-b from-black/55 via-[#0f172a]/28 to-transparent" />
         </div>
 
         <div className="relative max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-8 md:py-12">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 sm:mb-6">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 sm:mb-6 rounded-2xl bg-[#071526]/78 px-4 py-4 shadow-xl ring-1 ring-white/10 backdrop-blur-sm sm:bg-transparent sm:p-0 sm:shadow-none sm:ring-0 sm:backdrop-blur-none">
             <p className="text-cyan-400 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-1.5 sm:mb-2">Free, no-obligation</p>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 leading-tight">Get Your Quote</h1>
             <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto">
