@@ -174,7 +174,7 @@ export default function FenceStylePage({
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-14">
-            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="md:w-1/2">
+            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="w-full md:w-1/2">
               <p className="text-cyan-600 text-sm font-semibold tracking-widest uppercase mb-3">{title} Fencing</p>
               <h2 className="text-3xl md:text-5xl font-bold text-[#0f172a] mb-5">{title} Fence Installation in Northern Illinois</h2>
               <p className="text-gray-600 leading-relaxed mb-5 text-lg">{description}</p>
@@ -194,8 +194,8 @@ export default function FenceStylePage({
                 Get a Free Quote <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
-            <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="md:w-1/2">
-              <div className="relative h-[25rem] sm:h-[31rem] md:h-[34rem] pt-3 pr-3 sm:pt-5 sm:pr-5">
+            <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="w-full md:w-1/2">
+              <div className="relative w-full h-[25rem] sm:h-[31rem] md:h-[34rem] pt-3 pr-3 sm:pt-5 sm:pr-5">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.94 }}
                   whileInView={{ opacity: 1, scale: 1 }}
