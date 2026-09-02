@@ -47,7 +47,7 @@ const homeownerBenefits = [
 function optimizedWebp(src: string, width: 640 | 1280) {
   return src
     .replace("/images/", "/images/optimized/")
-    .replace(/\.jpe?g$/i, \`-\${width}.webp\`);
+    .replace(/\.jpe?g$/i, `-${width}.webp`);
 }
 
 function ProjectImage({
