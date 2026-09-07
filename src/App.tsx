@@ -1,5 +1,4 @@
-import { Routes, Route, Link, useLocation } from "react-router-dom";
-import { Phone } from "lucide-react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -20,13 +19,14 @@ import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ThankYou from "./pages/ThankYou";
+import "./mobile-home-tweaks.css";
 
 export default function App() {
   const { pathname } = useLocation();
-  const showMobileCta = pathname !== "/contact/";
+  const isHome = pathname === "/";
 
   return (
-    <div className="mobile-compact min-h-screen bg-white flex flex-col">
+    <div className={`mobile-compact min-h-screen bg-white flex flex-col${isHome ? " home-route" : ""}`}>
       <ScrollToTop />
       <TopBar />
       <Navbar />
@@ -52,16 +52,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-
-      {showMobileCta && <div className="mobile-cta lg:hidden" aria-label="Quick contact actions">
-        <a href="tel:8477404655" className="mobile-cta-call">
-          <Phone size={17} aria-hidden="true" />
-          Call
-        </a>
-        <Link to="/contact/" className="mobile-cta-quote">
-          Free Quote
-        </Link>
-      </div>}
     </div>
   );
 }
