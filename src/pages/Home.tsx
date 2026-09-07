@@ -250,7 +250,10 @@ function HeroSlideshow() {
           <HeroPhoto src={s.src} alt={s.alt} priority={i === 0} />
         </div>
       ))}
-      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-[#0f172a]/80 via-[#0f172a]/65 to-[#0f172a]/90" />
+      <div className="pointer-events-none absolute inset-0 opacity-25 md:hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_cyan_1px,_transparent_1px)] bg-[length:20px_20px]" />
+      </div>
+      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-[#0f172a]/22 to-[#0f172a]/48" />
     </div>
   );
 }
@@ -493,7 +496,7 @@ export default function Home() {
 
       {/* Residential • Commercial • Industrial */}
       <section className="bg-[#0f172a] text-white py-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+        <div className="hidden md:block absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_cyan_1px,_transparent_1px)] bg-[length:20px_20px]" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 text-center">

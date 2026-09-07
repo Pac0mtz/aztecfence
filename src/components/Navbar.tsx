@@ -44,8 +44,8 @@ export default function Navbar() {
     <nav
       className={`relative z-50 lg:sticky lg:top-0 transition-all duration-500 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-xl shadow-lg shadow-gray-200/30 border-b border-gray-100/50"
-          : "bg-white shadow-sm"
+          ? "bg-white/80 backdrop-blur-xl shadow-[0_10px_28px_rgba(15,23,42,0.12)] lg:shadow-lg lg:shadow-gray-200/30 lg:border-b lg:border-gray-100/50"
+          : "bg-white shadow-[0_8px_24px_rgba(15,23,42,0.10)] lg:shadow-sm"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4">
@@ -156,6 +156,10 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      <div
+        aria-hidden="true"
+        className="lg:hidden h-[3px] bg-gradient-to-r from-cyan-400 via-blue-600 to-[#0f172a] shadow-[0_4px_14px_rgba(6,182,212,0.35)]"
+      />
 
       {/* Mobile Menu */}
       <AnimatePresence>
