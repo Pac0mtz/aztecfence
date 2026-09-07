@@ -1,52 +1,21 @@
 /* Mobile-only homepage polish. Desktop and tablet styles are intentionally untouched. */
 @media (max-width: 767px) {
-  /* Keep the mobile hero headline compact like the visual reference. */
-  .mobile-compact.home-route main > div > section:first-of-type h1 {
+  /* Split hero: compact navy headline on the white copy block. */
+  .mobile-compact.home-route .home-hero h1 {
     font-size: clamp(1.75rem, 7.5vw, 2.15rem) !important;
     line-height: 1.08 !important;
-    text-shadow:
-      0 2px 4px rgb(0 0 0 / 0.65),
-      0 5px 16px rgb(0 0 0 / 0.45),
-      0 10px 28px rgb(0 0 0 / 0.28) !important;
+    text-shadow: none !important;
     overflow: visible !important;
   }
 
-  /* The two hero H1s live inside overflow-hidden animation wrappers. On mobile
-     that clips the large text shadow, so let the shadow paint outside them. */
-  .mobile-compact.home-route main > div > section:first-of-type h1.parent,
-  .mobile-compact.home-route main > div > section:first-of-type div:has(> h1) {
+  .mobile-compact.home-route .home-hero div:has(> h1) {
     overflow: visible !important;
   }
 
-  /* Reference-style clear background: preserve a very light gradient for
-     legibility instead of covering the photo with a dark wash. */
-  .mobile-compact.home-route main > div > section:first-of-type > div:first-child > div:last-child {
-    background: linear-gradient(
-      to bottom,
-      rgb(15 23 42 / 0.12) 0%,
-      rgb(15 23 42 / 0.05) 42%,
-      rgb(15 23 42 / 0.16) 100%
-    ) !important;
-  }
-
-  /* Use shadow for readability instead of a heavy overlay. */
-  .mobile-compact.home-route main > div > section:first-of-type [class*="text-shadow"],
-  .mobile-compact.home-route main > div > section:first-of-type p,
-  .mobile-compact.home-route main > div > section:first-of-type a {
-    text-shadow: 0 2px 8px rgb(0 0 0 / 0.55), 0 5px 18px rgb(0 0 0 / 0.28);
-  }
-
-  /* Hero photo stays completely still on mobile — no scroll zoom, scale,
-     parallax, transform animation, or background attachment effect. */
-  .mobile-static-hero,
-  .mobile-static-hero > div:first-child,
-  .mobile-static-hero-image,
-  .mobile-compact.home-route main > div > section:first-of-type img {
-    transform: none !important;
-    scale: 1 !important;
-    animation: none !important;
-    transition: none !important;
-    background-attachment: scroll !important;
+  .mobile-compact.home-route .home-hero [class*="text-shadow"],
+  .mobile-compact.home-route .home-hero p,
+  .mobile-compact.home-route .home-hero a {
+    text-shadow: none !important;
   }
 
   /* Featured Projects: user-controlled horizontal rail only. */

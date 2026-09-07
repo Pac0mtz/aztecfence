@@ -202,6 +202,136 @@ function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   );
 }
 
+const heroSlides: Slide[] = [
+  { src: "/images/Residential-vinyl-privacy-fence-08-1.jpg", alt: "Vinyl privacy fence in a residential yard" },
+  { src: "/images/Residential-vinyl-privacy-fence-11-1.jpg", alt: "Vinyl privacy fence along a backyard" },
+  { src: "/images/Residential-wood-solid-privacy-fence-05.jpg", alt: "Wood solid privacy fence" },
+  { src: "/images/Residential-wood-solid-privacy-fence-03.jpg", alt: "Wood solid privacy fence installation" },
+];
+
+function optimizedWebp(src: string, width: 640 | 1280) {
+  return src.replace("/images/", "/images/optimized/").replace(/\.jpe?g$/i, `-${width}.webp`);
+}
+
+function HeroPhoto({ src, alt, priority = false }: { src: string; alt: string; priority?: boolean }) {
+  return (
+    <picture className="block h-full w-full">
+      <source media="(max-width: 767px)" srcSet={optimizedWebp(src, 640)} type="image/webp" />
+      <source srcSet={optimizedWebp(src, 1280)} type="image/webp" />
+      <img
+        src={src}
+        alt={alt}
+        className="h-full w-full object-cover"
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+      />
+    </picture>
+  );
+}
+
+function HeroSlideshow() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setIndex((n) => (n + 1) % heroSlides.length), 4500);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <div className="absolute inset-0">
+      {heroSlides.map((s, i) => (
+        <div
+          key={s.src}
+          className={`absolute inset-0 transition-opacity duration-700 ease-out ${
+            i === index ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <HeroPhoto src={s.src} alt={s.alt} priority={i === 0} />
+        </div>
+      ))}
+      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-[#0f172a]/80 via-[#0f172a]/65 to-[#0f172a]/90" />
+    </div>
+  );
+}
+
+function HeroCopy() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="text-center"
+    >
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="inline-flex px-4 py-1.5 sm:px-5 sm:py-2 mb-4 rounded-full bg-blue-600 text-white text-[11px] sm:text-sm md:text-base font-semibold tracking-[0.18em] uppercase [text-shadow:none]"
+      >
+        Aztec Fence Company
+      </motion.p>
+
+      <div className="overflow-hidden mb-2">
+        <motion.h1
+          initial={{ y: 80 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+          className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
+        >
+          Our Fences <span className="text-cyan-600 md:text-cyan-400">Stand Firm</span>
+        </motion.h1>
+      </div>
+      <div className="overflow-hidden mb-6 sm:mb-8">
+        <motion.h1
+          initial={{ y: 80 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.55, duration: 0.8, ease: "easeOut" }}
+          className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
+        >
+          As Our <span className="text-cyan-600 md:text-cyan-400">Reputation</span>
+        </motion.h1>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-4 sm:mt-8"
+      >
+        <Link
+          to="/contact/"
+          className="group relative px-6 sm:px-10 py-3 sm:py-4 bg-cyan-500 text-white font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/30 text-sm sm:text-base [text-shadow:none]"
+        >
+          <span className="relative z-10">FREE QUOTE</span>
+          <div className="absolute inset-0 bg-cyan-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+        </Link>
+        <Link
+          to="/photo-gallery/"
+          className="group px-6 sm:px-10 py-3 sm:py-4 border-2 border-[#0f172a]/25 text-[#0f172a] font-bold rounded-full hover:bg-[#0f172a] hover:text-white transition-all hover:scale-105 text-sm sm:text-base md:border-white/60 md:text-white md:hover:bg-white md:hover:text-[#0f172a] [text-shadow:none]"
+        >
+          GALLERY
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:block"
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center pt-2"
+        >
+          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full" />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 function PhotoSlider({
   slides,
   className = "",
@@ -325,93 +455,14 @@ export default function Home() {
         keywords="fence company Northern Illinois, fence installation, aluminum fence, vinyl fence, wood fence, chain link fence, privacy fence, commercial fencing, Round Lake IL, Lake County fence contractor"
         path="/"
       />
-      {/* Hero Section */}
-      <section className="relative h-[68vh] min-h-[440px] md:h-[80vh] md:max-h-[760px] text-white overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="/images/Residential-vinyl-privacy-fence-04-1.jpg"
-            alt="Vinyl privacy fence installed by Aztec Fence in Northern Illinois"
-            fetchPriority="high"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/85 via-[#0f172a]/70 to-[#0f172a]/95" />
+      {/* Hero: copy above a photo slideshow on mobile; overlay on desktop */}
+      <section className="home-hero relative flex flex-col overflow-hidden md:block md:h-[80vh] md:min-h-[520px] md:max-h-[760px] md:text-white">
+        <div className="order-2 relative h-[220px] sm:h-[260px] md:absolute md:inset-0 md:h-full">
+          <HeroSlideshow />
         </div>
-
-        <div className="relative h-full flex items-center [text-shadow:0_2px_16px_rgb(0_0_0_/_45%)]">
-          <div className="max-w-7xl mx-auto px-4 w-full">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-flex px-4 py-1.5 sm:px-5 sm:py-2 mb-4 rounded-full bg-blue-600 text-white text-[11px] sm:text-sm md:text-base font-semibold tracking-[0.18em] uppercase [text-shadow:none]"
-              >
-                Aztec Fence Company
-              </motion.p>
-
-              <div className="overflow-hidden mb-2">
-                <motion.h1
-                  initial={{ y: 80 }}
-                  animate={{ y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                  className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight"
-                >
-                  Our Fences <span className="text-cyan-400">Stand Firm</span>
-                </motion.h1>
-              </div>
-              <div className="overflow-hidden mb-6 sm:mb-8">
-                <motion.h1
-                  initial={{ y: 80 }}
-                  animate={{ y: 0 }}
-                  transition={{ delay: 0.55, duration: 0.8, ease: "easeOut" }}
-                  className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight"
-                >
-                  As Our <span className="text-cyan-400">Reputation</span>
-                </motion.h1>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8"
-              >
-                <Link
-                  to="/contact/"
-                  className="group relative px-6 sm:px-10 py-3 sm:py-4 bg-cyan-500 text-white font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/30 text-sm sm:text-base"
-                >
-                  <span className="relative z-10">FREE QUOTE</span>
-                  <div className="absolute inset-0 bg-cyan-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
-                </Link>
-                <Link
-                  to="/photo-gallery/"
-                  className="group px-6 sm:px-10 py-3 sm:py-4 border-2 border-white/60 text-white font-bold rounded-full hover:bg-white hover:text-[#0f172a] transition-all hover:scale-105 backdrop-blur-sm text-sm sm:text-base"
-                >
-                  GALLERY
-                </Link>
-              </motion.div>
-
-              {/* Scroll indicator */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2"
-              >
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center pt-2"
-                >
-                  <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full" />
-                </motion.div>
-              </motion.div>
-            </motion.div>
+        <div className="order-1 relative z-10 bg-white px-4 py-7 md:absolute md:inset-0 md:flex md:items-center md:bg-transparent md:py-0 md:[text-shadow:0_2px_16px_rgb(0_0_0_/_45%)]">
+          <div className="max-w-7xl mx-auto w-full">
+            <HeroCopy />
           </div>
         </div>
       </section>
