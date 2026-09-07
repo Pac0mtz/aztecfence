@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 /**
- * Mobile-only homepage interaction polish.
+ * Mobile-only homepage interaction cleanup.
  * - Featured Projects stays manually swipeable but does not auto-scroll.
- * - Customer Reviews auto-scroll smoothly and remain manually swipeable.
- * - Hero background is explicitly marked static so CSS can suppress any motion.
+ * - Customer Reviews keeps smooth auto-scroll while still allowing native drag/swipe.
  */
 export default function MobileHomeEnhancements() {
   const { pathname } = useLocation();
@@ -17,99 +16,99 @@ export default function MobileHomeEnhancements() {
     let attempts = 0;
 
     const setup = () => {
-      const heroSection = document.querySelector<HTMLElement>("main > div > section:first-of-type");
-      const heroImage = heroSection?.querySelector<HTMLImageElement>("img");
-      heroSection?.classList.add("mobile-static-hero");
-      heroImage?.classList.add("mobile-static-hero-image");
+      const headings = Array.from(document.querySelectorAll("h2"));
+      const featuredHeading = headings.find((heading) => heading.textContent?.includes("Featured Projects"));
+      const reviewsHeading = headings.find((heading) => heading.textContent?.includes("Customer Reviews"));
 
-      const featuredHeading = Array.from(document.querySelectorAll("h2")).find((heading) =>
-        heading.textContent?.includes("Featured Projects"),
-      );
       const featuredSection = featuredHeading?.closest("section");
       const featuredScroller = featuredSection?.querySelector<HTMLDivElement>("div.flex.overflow-x-auto");
 
-      const reviewsHeading = Array.from(document.querySelectorAll("h2")).find((heading) =>
-        heading.textContent?.includes("Customer Reviews"),
-      );
       const reviewsSection = reviewsHeading?.closest("section");
-      const reviewsTrack = reviewsSection?.querySelector<HTMLDivElement>("div.flex.animate-marquee");
-      const reviewsScroller = reviewsTrack?.parentElement as HTMLDivElement | null;
+      const reviewsScroller = reviewsSection?.querySelector<HTMLDivElement>("[data-mobile-reviews-scroller]");
 
-      if (!featuredScroller || !reviewsTrack || !reviewsScroller) {
-        if (attempts++ < 30) window.setTimeout(setup, 100);
+      if (!featuredScroller || !reviewsScroller) {
+        if (attempts++ < 40) window.setTimeout(setup, 100);
         return;
       }
 
-      // Featured Projects: disable the Home.tsx desktop velocity loop, but keep
-      // the element's native horizontal overflow so users can swipe/drag it.
-      const zeroFeaturedVelocity = () => {
-        const rect = featuredScroller.getBoundingClientRect();
-        featuredScroller.dispatchEvent(
-          new MouseEvent("mousemove", {
-            bubbles: true,
-            clientX: rect.left + rect.width * 0.42,
-            clientY: rect.top + rect.height / 2,
-          }),
-        );
+      // Featured Projects: neutralize the original Home.tsx RAF motion while
+      // preserving native touch scrolling. The locked position only updates
+      // while the user is actively touching/dragging the rail.
+      let featuredTouching = false;
+      let featuredLocked = featuredScroller.scrollLeft;
+      let featuredRaf = 0;
+
+      const freezeFeatured = () => {
+        if (featuredTouching) {
+          featuredLocked = featuredScroller.scrollLeft;
+        } else if (Math.abs(featuredScroller.scrollLeft - featuredLocked) > 0.5) {
+          featuredScroller.scrollLeft = featuredLocked;
+        }
+        featuredRaf = requestAnimationFrame(freezeFeatured);
       };
-      zeroFeaturedVelocity();
-      featuredScroller.dataset.mobileAutoScroll = "off";
 
-      // Reviews: replace the transform marquee with a true scroll container so
-      // auto motion and native touch scrolling work together on iPhone.
-      reviewsSection?.classList.add("mobile-reviews-section");
-      reviewsScroller.classList.add("mobile-reviews-scroller");
-      reviewsTrack.classList.remove("animate-marquee");
-      reviewsTrack.classList.add("mobile-reviews-track");
-      Array.from(reviewsTrack.children).forEach((card) => card.classList.add("mobile-review-card"));
+      const onFeaturedTouchStart = () => {
+        featuredTouching = true;
+      };
+      const onFeaturedTouchMove = () => {
+        featuredLocked = featuredScroller.scrollLeft;
+      };
+      const onFeaturedTouchEnd = () => {
+        featuredLocked = featuredScroller.scrollLeft;
+        featuredTouching = false;
+      };
 
-      let touching = false;
-      let resumeTimer = 0;
-      let raf = 0;
-      let lastTime = performance.now();
+      featuredScroller.addEventListener("touchstart", onFeaturedTouchStart, { passive: true });
+      featuredScroller.addEventListener("touchmove", onFeaturedTouchMove, { passive: true });
+      featuredScroller.addEventListener("touchend", onFeaturedTouchEnd, { passive: true });
+      featuredScroller.addEventListener("touchcancel", onFeaturedTouchEnd, { passive: true });
+      featuredRaf = requestAnimationFrame(freezeFeatured);
 
-      const tick = (time: number) => {
-        const dt = Math.min(32, time - lastTime);
-        lastTime = time;
+      // Reviews: smooth auto-scroll, but hands off immediately while the user
+      // drags. Resume shortly after release so the rail still feels alive.
+      let reviewsTouching = false;
+      let reviewsResumeAt = 0;
+      let reviewsLastTime = performance.now();
+      let reviewsRaf = 0;
 
-        if (!touching) {
-          const segment = reviewsTrack.scrollWidth / 4;
-          if (segment > 0) {
-            reviewsScroller.scrollLeft += (24 * dt) / 1000;
-            if (reviewsScroller.scrollLeft >= segment) {
-              reviewsScroller.scrollLeft -= segment;
-            }
+      const tickReviews = (time: number) => {
+        const dt = Math.min(32, time - reviewsLastTime);
+        reviewsLastTime = time;
+
+        if (!reviewsTouching && time >= reviewsResumeAt) {
+          const half = reviewsScroller.scrollWidth / 2;
+          if (half > 0) {
+            reviewsScroller.scrollLeft += (26 * dt) / 1000;
+            if (reviewsScroller.scrollLeft >= half) reviewsScroller.scrollLeft -= half;
           }
         }
 
-        raf = requestAnimationFrame(tick);
+        reviewsRaf = requestAnimationFrame(tickReviews);
       };
 
-      const pauseForTouch = () => {
-        touching = true;
-        if (resumeTimer) window.clearTimeout(resumeTimer);
+      const onReviewsTouchStart = () => {
+        reviewsTouching = true;
+      };
+      const onReviewsTouchEnd = () => {
+        reviewsTouching = false;
+        reviewsResumeAt = performance.now() + 1400;
       };
 
-      const resumeAfterTouch = () => {
-        if (resumeTimer) window.clearTimeout(resumeTimer);
-        resumeTimer = window.setTimeout(() => {
-          touching = false;
-        }, 1200);
-      };
-
-      reviewsScroller.addEventListener("touchstart", pauseForTouch, { passive: true });
-      reviewsScroller.addEventListener("touchend", resumeAfterTouch, { passive: true });
-      reviewsScroller.addEventListener("touchcancel", resumeAfterTouch, { passive: true });
-
-      raf = requestAnimationFrame(tick);
+      reviewsScroller.addEventListener("touchstart", onReviewsTouchStart, { passive: true });
+      reviewsScroller.addEventListener("touchend", onReviewsTouchEnd, { passive: true });
+      reviewsScroller.addEventListener("touchcancel", onReviewsTouchEnd, { passive: true });
+      reviewsRaf = requestAnimationFrame(tickReviews);
 
       cleanup = () => {
-        cancelAnimationFrame(raf);
-        if (resumeTimer) window.clearTimeout(resumeTimer);
-        reviewsScroller.removeEventListener("touchstart", pauseForTouch);
-        reviewsScroller.removeEventListener("touchend", resumeAfterTouch);
-        reviewsScroller.removeEventListener("touchcancel", resumeAfterTouch);
-        delete featuredScroller.dataset.mobileAutoScroll;
+        cancelAnimationFrame(featuredRaf);
+        cancelAnimationFrame(reviewsRaf);
+        featuredScroller.removeEventListener("touchstart", onFeaturedTouchStart);
+        featuredScroller.removeEventListener("touchmove", onFeaturedTouchMove);
+        featuredScroller.removeEventListener("touchend", onFeaturedTouchEnd);
+        featuredScroller.removeEventListener("touchcancel", onFeaturedTouchEnd);
+        reviewsScroller.removeEventListener("touchstart", onReviewsTouchStart);
+        reviewsScroller.removeEventListener("touchend", onReviewsTouchEnd);
+        reviewsScroller.removeEventListener("touchcancel", onReviewsTouchEnd);
       };
     };
 
