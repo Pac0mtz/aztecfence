@@ -1,21 +1,39 @@
 /* Mobile-only homepage polish. Desktop and tablet styles are intentionally untouched. */
 @media (max-width: 767px) {
-  /* Slightly smaller hero headline on phones. This intentionally overrides the
-     broader mobile compact heading rule in index.css only on the homepage. */
+  /* Keep the mobile hero headline compact like the visual reference. */
   .mobile-compact.home-route main > div > section:first-of-type h1 {
     font-size: clamp(1.75rem, 7.5vw, 2.15rem) !important;
     line-height: 1.08 !important;
+    text-shadow:
+      0 2px 4px rgb(0 0 0 / 0.65),
+      0 5px 16px rgb(0 0 0 / 0.45),
+      0 10px 28px rgb(0 0 0 / 0.28) !important;
   }
 
-  /* Override the actual Tailwind hero gradient on phones. Keep the image
-     readable but let substantially more of the fence/background show through. */
+  /* Reference-style clear background: preserve a very light gradient for
+     legibility instead of covering the photo with a dark wash. */
   .mobile-compact.home-route main > div > section:first-of-type > div:first-child > div:last-child {
-    background-image: linear-gradient(
+    background: linear-gradient(
       to bottom,
-      rgb(15 23 42 / 0.34),
-      rgb(15 23 42 / 0.20),
-      rgb(15 23 42 / 0.46)
+      rgb(15 23 42 / 0.12) 0%,
+      rgb(15 23 42 / 0.05) 42%,
+      rgb(15 23 42 / 0.16) 100%
     ) !important;
-    background-color: transparent !important;
+  }
+
+  /* Use shadow for readability instead of a heavy overlay. */
+  .mobile-compact.home-route main > div > section:first-of-type [class*="text-shadow"],
+  .mobile-compact.home-route main > div > section:first-of-type p,
+  .mobile-compact.home-route main > div > section:first-of-type a {
+    text-shadow: 0 2px 8px rgb(0 0 0 / 0.55), 0 5px 18px rgb(0 0 0 / 0.28);
+  }
+
+  /* Hero photo should stay completely still on mobile — no scroll zoom,
+     scale transition, parallax, or transform animation. */
+  .mobile-compact.home-route main > div > section:first-of-type img {
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    transition: none !important;
   }
 }
