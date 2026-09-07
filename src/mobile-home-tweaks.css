@@ -7,9 +7,15 @@
     line-height: 1.08 !important;
   }
 
-  /* Let more of the hero photo show through on phones while keeping enough
-     contrast for the white headline and CTA buttons. */
+  /* Override the actual Tailwind hero gradient on phones. Keep the image
+     readable but let substantially more of the fence/background show through. */
   .mobile-compact.home-route main > div > section:first-of-type > div:first-child > div:last-child {
-    background: rgb(15 23 42 / 0.58) !important;
+    background-image: linear-gradient(
+      to bottom,
+      rgb(15 23 42 / 0.34),
+      rgb(15 23 42 / 0.20),
+      rgb(15 23 42 / 0.46)
+    ) !important;
+    background-color: transparent !important;
   }
 }
