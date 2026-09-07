@@ -253,7 +253,7 @@ function HeroSlideshow() {
       <div className="pointer-events-none absolute inset-0 opacity-25 md:hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_cyan_1px,_transparent_1px)] bg-[length:20px_20px]" />
       </div>
-      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-[#0f172a]/22 to-[#0f172a]/48" />
+      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-[#0f172a]/52 via-[#0f172a]/34 to-[#0f172a]/60" />
     </div>
   );
 }
@@ -508,7 +508,7 @@ export default function Home() {
         <div className="order-3 relative h-[220px] sm:h-[260px] md:absolute md:inset-0 md:h-full">
           <HeroSlideshow />
         </div>
-        <div className="order-1 relative z-10 bg-white px-4 py-7 md:absolute md:inset-0 md:flex md:items-center md:bg-transparent md:py-0 md:[text-shadow:0_2px_16px_rgb(0_0_0_/_45%)]">
+        <div className="order-1 relative z-10 bg-white px-4 py-7 md:absolute md:inset-0 md:flex md:items-center md:bg-transparent md:py-0 md:[text-shadow:0_2px_18px_rgb(0_0_0_/_62%)]">
           <div className="max-w-7xl mx-auto w-full">
             <HeroCopy />
           </div>
