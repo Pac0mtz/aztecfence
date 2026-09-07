@@ -28,12 +28,90 @@
     text-shadow: 0 2px 8px rgb(0 0 0 / 0.55), 0 5px 18px rgb(0 0 0 / 0.28);
   }
 
-  /* Hero photo should stay completely still on mobile — no scroll zoom,
-     scale transition, parallax, or transform animation. */
+  /* Hero photo stays completely still on mobile — no scroll zoom, scale,
+     parallax, transform animation, or background attachment effect. */
+  .mobile-static-hero,
+  .mobile-static-hero > div:first-child,
+  .mobile-static-hero-image,
   .mobile-compact.home-route main > div > section:first-of-type img {
     transform: none !important;
     scale: 1 !important;
     animation: none !important;
     transition: none !important;
+    background-attachment: scroll !important;
+  }
+
+  /* Featured Projects: user-controlled horizontal rail only. */
+  [data-mobile-auto-scroll="off"] {
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  /* Reviews: smaller, denser cards while preserving horizontal motion. */
+  .mobile-reviews-section {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  .mobile-reviews-section > div[class*="mb-10"] {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .mobile-reviews-scroller {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+  }
+
+  .mobile-reviews-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-reviews-track {
+    animation: none !important;
+    width: max-content;
+    will-change: auto;
+  }
+
+  .mobile-review-card {
+    width: min(76vw, 285px) !important;
+    margin-left: 0.4rem !important;
+    margin-right: 0.4rem !important;
+    padding: 0.9rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .mobile-review-card > div:first-of-type {
+    margin-bottom: 0.45rem !important;
+  }
+
+  .mobile-review-card > p {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin-bottom: 0.75rem !important;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .mobile-review-card > div:last-of-type {
+    gap: 0.55rem !important;
+    padding-top: 0.6rem !important;
+  }
+
+  .mobile-review-card > div:last-of-type > div:first-child {
+    width: 2rem !important;
+    height: 2rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .mobile-review-card .absolute.top-4.right-4 {
+    top: 0.65rem !important;
+    right: 0.65rem !important;
   }
 }
