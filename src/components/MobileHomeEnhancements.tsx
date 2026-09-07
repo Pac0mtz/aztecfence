@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 /**
- * Mobile-only interaction polish for the homepage Featured Projects rail.
- * The existing Home carousel owns the requestAnimationFrame loop; this helper
- * nudges its existing mouse-driven velocity control so a tap can pause/resume
- * the motion without changing desktop behavior.
+ * Mobile-only homepage motion for the Featured Projects rail.
+ * Uses its own requestAnimationFrame loop so iOS does not depend on desktop
+ * mouse-velocity events. A tap pauses/resumes; swipe gestures remain native.
  */
 export default function MobileHomeEnhancements() {
   const { pathname } = useLocation();
@@ -24,61 +23,84 @@ export default function MobileHomeEnhancements() {
       const scroller = section?.querySelector<HTMLDivElement>("div.flex.overflow-x-auto");
 
       if (!scroller) {
-        if (attempts++ < 20) window.setTimeout(setup, 100);
+        if (attempts++ < 30) window.setTimeout(setup, 100);
         return;
       }
 
       let paused = false;
+      let touching = false;
       let touchStartX = 0;
       let touchStartY = 0;
+      let lastTime = performance.now();
+      let raf = 0;
 
-      const setVelocity = (velocity: number) => {
-        const rect = scroller.getBoundingClientRect();
-        // Mirrors Home.tsx: velocity = (x - 0.42) * 3.4
-        const normalizedX = 0.42 + velocity / 3.4;
-        scroller.dispatchEvent(
-          new MouseEvent("mousemove", {
-            bubbles: true,
-            clientX: rect.left + rect.width * normalizedX,
-            clientY: rect.top + rect.height / 2,
-          }),
-        );
+      // Disable the Home.tsx desktop velocity loop on mobile by dispatching a
+      // zero-velocity mouse position once. Our mobile loop below owns motion.
+      const rect = scroller.getBoundingClientRect();
+      scroller.dispatchEvent(
+        new MouseEvent("mousemove", {
+          bubbles: true,
+          clientX: rect.left + rect.width * 0.42,
+          clientY: rect.top + rect.height / 2,
+        }),
+      );
+
+      const tick = (time: number) => {
+        const dt = Math.min(32, time - lastTime);
+        lastTime = time;
+
+        if (!paused && !touching) {
+          const half = scroller.scrollWidth / 2;
+          if (half > 0) {
+            // About 34 px/sec: subtle, continuous motion like the original.
+            scroller.scrollLeft += (34 * dt) / 1000;
+            if (scroller.scrollLeft >= half) scroller.scrollLeft -= half;
+          }
+        }
+
+        raf = requestAnimationFrame(tick);
       };
 
-      // Ensure a gentle, visible mobile auto-scroll when the section mounts.
-      setVelocity(0.42);
+      raf = requestAnimationFrame(tick);
 
       const onTouchStart = (event: TouchEvent) => {
         const touch = event.touches[0];
         if (!touch) return;
+        touching = true;
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
       };
 
       const onTouchEnd = (event: TouchEvent) => {
         const touch = event.changedTouches[0];
+        touching = false;
         if (!touch) return;
 
         const moved = Math.hypot(touch.clientX - touchStartX, touch.clientY - touchStartY);
-        if (moved > 10) return; // Keep normal swipe/scroll gestures intact.
+        if (moved > 10) return; // Swipes keep normal native scrolling/link behavior.
 
         paused = !paused;
-        setVelocity(paused ? 0 : 0.42);
+        scroller.dataset.mobileAutoScrollPaused = paused ? "true" : "false";
 
-        // A tap is used as the motion control on mobile, so don't accidentally
-        // open a project card on the same tap.
-        if (paused) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+        // A tap is the pause/resume control, so suppress navigation on that tap.
+        event.preventDefault();
+        event.stopPropagation();
+      };
+
+      const onTouchCancel = () => {
+        touching = false;
       };
 
       scroller.addEventListener("touchstart", onTouchStart, { passive: true });
       scroller.addEventListener("touchend", onTouchEnd, { passive: false });
+      scroller.addEventListener("touchcancel", onTouchCancel, { passive: true });
 
       cleanup = () => {
+        cancelAnimationFrame(raf);
         scroller.removeEventListener("touchstart", onTouchStart);
         scroller.removeEventListener("touchend", onTouchEnd);
+        scroller.removeEventListener("touchcancel", onTouchCancel);
+        delete scroller.dataset.mobileAutoScrollPaused;
       };
     };
 
