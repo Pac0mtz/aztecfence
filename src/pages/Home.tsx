@@ -428,6 +428,51 @@ function ImageCarousel() {
   );
 }
 
+function YearsBanner({ className = "" }: { className?: string }) {
+  return (
+    <section className={`relative bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-5 overflow-hidden ${className}`}>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 origin-left"
+      />
+      <div className="relative max-w-7xl mx-auto px-4 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-lg md:text-xl font-bold tracking-wide"
+        >
+          30 Years Of Quality Fencing
+        </motion.p>
+      </div>
+    </section>
+  );
+}
+
+function RciBanner({ className = "" }: { className?: string }) {
+  return (
+    <section className={`bg-[#0f172a] text-white py-4 relative overflow-hidden ${className}`}>
+      <div className="hidden md:block absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_cyan_1px,_transparent_1px)] bg-[length:20px_20px]" />
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4 text-center">
+        <motion.p
+          initial={{ opacity: 0, letterSpacing: "0em" }}
+          whileInView={{ opacity: 1, letterSpacing: "0.2em" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-sm md:text-base font-medium uppercase"
+        >
+          Residential &bull; Commercial &bull; Industrial
+        </motion.p>
+      </div>
+    </section>
+  );
+}
+
 function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string }) {
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
@@ -460,7 +505,7 @@ export default function Home() {
       />
       {/* Hero: copy above a photo slideshow on mobile; overlay on desktop */}
       <section className="home-hero relative flex flex-col overflow-hidden md:block md:h-[80vh] md:min-h-[520px] md:max-h-[760px] md:text-white">
-        <div className="order-2 relative h-[220px] sm:h-[260px] md:absolute md:inset-0 md:h-full">
+        <div className="order-3 relative h-[220px] sm:h-[260px] md:absolute md:inset-0 md:h-full">
           <HeroSlideshow />
         </div>
         <div className="order-1 relative z-10 bg-white px-4 py-7 md:absolute md:inset-0 md:flex md:items-center md:bg-transparent md:py-0 md:[text-shadow:0_2px_16px_rgb(0_0_0_/_45%)]">
@@ -468,49 +513,15 @@ export default function Home() {
             <HeroCopy />
           </div>
         </div>
+        <RciBanner className="order-2 md:hidden" />
+        <YearsBanner className="order-4 md:hidden" />
       </section>
 
       {/* Image Carousel — Auto-advancing fence showcase */}
       <ImageCarousel />
 
-      {/* 30 Years Banner */}
-      <section className="relative bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-5 overflow-hidden">
-        <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 origin-left"
-        />
-        <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-lg md:text-xl font-bold tracking-wide"
-          >
-            30 Years Of Quality Fencing
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Residential • Commercial • Industrial */}
-      <section className="bg-[#0f172a] text-white py-4 relative overflow-hidden">
-        <div className="hidden md:block absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_cyan_1px,_transparent_1px)] bg-[length:20px_20px]" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.p
-            initial={{ opacity: 0, letterSpacing: "0em" }}
-            whileInView={{ opacity: 1, letterSpacing: "0.2em" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-sm md:text-base font-medium uppercase"
-          >
-            Residential &bull; Commercial &bull; Industrial
-          </motion.p>
-        </div>
-      </section>
+      <YearsBanner className="hidden md:block" />
+      <RciBanner className="hidden md:block" />
 
       {/* Customer Reviews — Horizontal Auto-Scroll Marquee */}
       <section className="py-20 bg-gray-50 relative overflow-hidden">
