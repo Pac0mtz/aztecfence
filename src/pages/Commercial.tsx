@@ -170,7 +170,7 @@ export default function Commercial() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8">
                 <Link
                   to="/contact/"
-                  className="inline-flex justify-center items-center gap-2 px-7 py-3.5 bg-cyan-500 text-white font-bold rounded-full hover:bg-cyan-400 transition-colors"
+                  className="inline-flex justify-center items-center gap-2 px-7 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all"
                 >
                   Request a Site Consultation <ArrowRight size={18} aria-hidden="true" />
                 </Link>
@@ -402,7 +402,7 @@ export default function Commercial() {
           <h2 className="text-3xl md:text-5xl font-bold mt-3">Ready to plan your commercial fence project?</h2>
           <p className="text-gray-200 text-lg leading-relaxed mt-5">Tell us about the property, access needs, and timeline. We will help shape the next step.</p>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mt-8">
-            <Link to="/contact/" className="inline-flex justify-center items-center gap-2 px-8 py-3.5 bg-cyan-500 text-white font-bold rounded-full hover:bg-cyan-400 transition-colors">
+            <Link to="/contact/" className="inline-flex justify-center items-center gap-2 px-8 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all">
               Request a Free Consultation <ArrowRight size={18} />
             </Link>
             <a href="tel:8477404655" className="inline-flex justify-center items-center gap-2 px-8 py-3.5 border border-white/45 text-white font-bold rounded-full hover:bg-white hover:text-[#0f172a] transition-colors">

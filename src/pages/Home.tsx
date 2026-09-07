@@ -282,7 +282,7 @@ function HeroCopy() {
           transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
           className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
         >
-          Our Fences <span className="text-cyan-600 md:text-cyan-400">Stand Firm</span>
+          Our Fences <span className="text-[#004AAD] md:text-[#7EB6FF]">Stand Firm</span>
         </motion.h1>
       </div>
       <div className="overflow-hidden mb-6 sm:mb-8">
@@ -292,7 +292,7 @@ function HeroCopy() {
           transition={{ delay: 0.55, duration: 0.8, ease: "easeOut" }}
           className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
         >
-          As Our <span className="text-cyan-600 md:text-cyan-400">Reputation</span>
+          As Our <span className="text-[#004AAD] md:text-[#7EB6FF]">Reputation</span>
         </motion.h1>
       </div>
 
@@ -304,10 +304,10 @@ function HeroCopy() {
       >
         <Link
           to="/contact/"
-          className="group relative px-6 sm:px-10 py-3 sm:py-4 bg-cyan-500 text-white font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/30 text-sm sm:text-base [text-shadow:none]"
+          className="group relative px-6 sm:px-10 py-3 sm:py-4 btn-primary font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-blue-600/30 text-sm sm:text-base [text-shadow:none]"
         >
           <span className="relative z-10">FREE QUOTE</span>
-          <div className="absolute inset-0 bg-cyan-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
         </Link>
         <Link
           to="/photo-gallery/"
@@ -895,10 +895,10 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-5">
               <Link
                 to="/contact/"
-                className="group relative px-10 py-4 bg-cyan-500 text-white font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/30"
+                className="group relative px-10 py-4 btn-primary font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-xl hover:shadow-blue-600/30"
               >
                 <span className="relative z-10">BOOK NOW</span>
-                <div className="absolute inset-0 bg-cyan-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
               </Link>
               <a
                 href="tel:8477404655"

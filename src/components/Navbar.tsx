@@ -139,7 +139,7 @@ export default function Navbar() {
           {/* CTA Button */}
           <Link
             to="/contact/"
-            className="hidden lg:inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-105"
+            className="hidden lg:inline-flex items-center px-6 py-2.5 btn-primary text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-600/20 transition-all hover:scale-105"
           >
             FREE QUOTE
           </Link>
@@ -226,7 +226,7 @@ export default function Navbar() {
               )}
               <Link
                 to="/contact/"
-                className="block mt-3 text-center px-5 py-3 bg-gradient-to-r from-[#0f172a] to-blue-900 text-white text-sm font-bold rounded-full"
+                className="block mt-3 text-center px-5 py-3 btn-primary text-sm font-bold rounded-full"
                 onClick={() => setMobileOpen(false)}
               >
                 FREE QUOTE

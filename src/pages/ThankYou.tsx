@@ -30,7 +30,7 @@ export default function ThankYou() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="tel:8477404655"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-cyan-500 text-white font-bold rounded-full hover:bg-cyan-400 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all"
             >
               <Phone size={18} />
               Call (847) 740-4655

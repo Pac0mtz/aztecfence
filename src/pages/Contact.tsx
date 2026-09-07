@@ -184,7 +184,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3.5 sm:px-6 sm:py-4 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
+              className="w-full flex items-center justify-center gap-2 px-5 py-3.5 sm:px-6 sm:py-4 btn-primary font-bold rounded-full hover:shadow-lg hover:shadow-blue-600/30 transition-all hover:scale-[1.01] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
             >
               {loading ? (
                 <>

@@ -34,7 +34,7 @@ export default function Footer() {
                 <a href="tel:8477404655" className="hover:text-cyan-400 transition-colors">(847) 740-4655</a>
               </div>
             </div>
-            <Link to="/contact/" className="inline-block mt-6 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-bold rounded-full hover:shadow-lg hover:shadow-cyan-500/20 transition-all hover:scale-105">
+            <Link to="/contact/" className="inline-block mt-6 px-6 py-3 btn-primary text-sm font-bold rounded-full hover:shadow-lg hover:shadow-blue-600/20 transition-all hover:scale-105">
               Request a Free Consultation
             </Link>
           </motion.div>

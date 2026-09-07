@@ -162,7 +162,7 @@ export default function FenceStylePage({
                 <span>Rated 4.9 by 106+ Google reviews · 30+ years in Northern Illinois</span>
               </div>
               <div className="flex flex-wrap gap-4 mt-8">
-                <Link to="/contact/" className="px-8 py-3.5 bg-cyan-500 text-white font-bold rounded-full hover:bg-cyan-400 transition-all hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30">Free Consultation</Link>
+                <Link to="/contact/" className="px-8 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30">Free Consultation</Link>
                 <a href="tel:8477404655" className="px-8 py-3.5 border-2 border-white/60 text-white font-bold rounded-full hover:bg-white hover:text-[#0f172a] transition-all hover:scale-105">Call (847) 740-4655</a>
               </div>
             </motion.div>
@@ -344,7 +344,7 @@ export default function FenceStylePage({
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Ready for Your {title} Fence?</h2>
           <p className="text-gray-300 text-lg mb-8">Get a free, no-obligation consultation and quote from Northern Illinois's trusted fence experts.</p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <a href="tel:8477404655" className="flex items-center gap-2 px-8 py-3.5 bg-cyan-500 text-white font-bold rounded-full hover:bg-cyan-400 transition-all hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30">
+            <a href="tel:8477404655" className="flex items-center gap-2 px-8 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30">
               <Phone size={18} /> Call (847) 740-4655
             </a>
             <Link to="/contact/" className="px-8 py-3.5 border-2 border-white/40 text-white font-bold rounded-full hover:bg-white hover:text-[#0f172a] transition-all hover:scale-105">Request a Free Consultation</Link>
