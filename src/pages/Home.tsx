@@ -591,16 +591,16 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col gap-6 lg:gap-8">
             {/* Service Tabs */}
-            <div className="grid grid-cols-2 lg:flex lg:flex-col gap-2 lg:w-52">
+            <div className="service-tabs grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
               {services.map((service) => (
                 <motion.button
                   key={service.id}
                   onClick={() => setActiveService(service.id)}
-                  whileHover={{ x: 4 }}
+                  whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center gap-3 px-5 py-3.5 lg:flex-1 rounded-xl text-sm font-bold transition-all w-full text-left overflow-hidden ${
+                  className={`relative flex items-center justify-center gap-2 px-3 py-3.5 rounded-xl text-sm font-bold transition-all w-full overflow-hidden ${
                     activeService === service.id
                       ? "bg-[#0f172a] text-white shadow-xl shadow-gray-900/20"
                       : "bg-gray-100 text-gray-500 hover:bg-gray-200"
@@ -609,14 +609,14 @@ export default function Home() {
                   {activeService === service.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-400 rounded-l-xl"
+                      className="absolute left-0 right-0 bottom-0 h-1 bg-cyan-400 rounded-b-xl"
                     />
                   )}
                   {(() => {
                     const Icon = serviceIcons[service.id];
-                    return Icon ? <Icon size={26} className={`shrink-0 ${activeService === service.id ? "text-cyan-400" : "text-gray-400"}`} /> : null;
+                    return Icon ? <Icon size={22} className={`shrink-0 ${activeService === service.id ? "text-cyan-400" : "text-gray-400"}`} /> : null;
                   })()}
-                  <span className="uppercase text-xs tracking-widest">{service.label}</span>
+                  <span className="uppercase text-[11px] tracking-widest">{service.label}</span>
                 </motion.button>
               ))}
             </div>

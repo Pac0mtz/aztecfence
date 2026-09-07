@@ -317,10 +317,11 @@
     margin-bottom: 0.45rem !important;
   }
 
-  /* Keep all service tabs visible in a 2-column grid. No swipe rail. */
-  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"] > button {
+  /* Keep all service tabs visible in a compact 2-column grid. */
+  .mobile-compact .service-tabs > button,
+  .mobile-compact main [class~="grid-cols-2"][class*="lg:grid-cols-7"] > button {
     min-width: 0;
-    padding: 0.65rem 0.7rem !important;
+    padding: 0.65rem 0.55rem !important;
   }
 
   /* Service/detail imagery should not dominate the viewport. */
