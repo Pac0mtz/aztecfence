@@ -186,7 +186,7 @@ const gateSlides: Slide[] = [
 
 function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   return (
-    <div className="featured-card relative shrink-0 h-[188px] w-[236px] sm:h-[240px] sm:w-[320px] md:h-[clamp(240px,32vh,320px)] md:w-auto md:aspect-[4/3] rounded-xl overflow-hidden pointer-events-none">
+    <div className="featured-card relative shrink-0 size-[148px] sm:h-[240px] sm:w-[320px] sm:size-auto md:h-[clamp(240px,32vh,320px)] md:w-auto md:aspect-[4/3] rounded-xl overflow-hidden pointer-events-none">
       <img
         src={img.src}
         alt={img.label}
@@ -349,7 +349,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-cyan-400 text-sm sm:text-lg md:text-xl font-semibold mb-4 tracking-widest uppercase"
+                className="inline-flex px-4 py-1.5 sm:px-5 sm:py-2 mb-4 rounded-full bg-blue-600 text-white text-[11px] sm:text-sm md:text-base font-semibold tracking-[0.18em] uppercase [text-shadow:none]"
               >
                 Aztec Fence Company
               </motion.p>
@@ -784,12 +784,17 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.015, duration: 0.3 }}
                 whileHover={{ scale: 1.08, y: -2 }}
-                className="px-4 py-2.5 bg-gradient-to-r from-gray-50 to-white rounded-full border border-gray-200 text-sm text-gray-600 hover:border-cyan-300 hover:text-cyan-600 hover:shadow-md hover:shadow-cyan-100/50 transition-all cursor-default"
+                className={`px-4 py-2.5 bg-gradient-to-r from-gray-50 to-white rounded-full border border-gray-200 text-sm text-gray-600 hover:border-cyan-300 hover:text-cyan-600 hover:shadow-md hover:shadow-cyan-100/50 transition-all cursor-default ${
+                  idx >= 8 ? "hidden md:block" : ""
+                }`}
               >
                 {area} Fencing
               </motion.div>
             ))}
           </div>
+          <p className="md:hidden text-center text-sm text-gray-500 mt-5">
+            Plus {areas.length - 8} more communities across Northern Illinois
+          </p>
         </div>
       </section>
 

@@ -291,8 +291,8 @@
   }
 
   .mobile-compact .featured-card {
-    height: 176px !important;
-    width: 216px !important;
+    height: 148px !important;
+    width: 148px !important;
     border-radius: 0.85rem !important;
   }
 
@@ -317,26 +317,10 @@
     margin-bottom: 0.45rem !important;
   }
 
-  /* Home service selector becomes a horizontal, thumb-friendly rail. */
-  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"] {
-    display: flex !important;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scroll-snap-type: x proximity;
-    padding-bottom: 0.2rem;
-    scrollbar-width: none;
-  }
-
-  .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"]::-webkit-scrollbar {
-    display: none;
-  }
-
+  /* Keep all service tabs visible in a 2-column grid. No swipe rail. */
   .mobile-compact main [class~="grid-cols-2"][class*="lg:flex"][class*="lg:w-52"] > button {
-    min-width: 138px;
-    width: auto !important;
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    padding: 0.72rem 0.9rem !important;
+    min-width: 0;
+    padding: 0.65rem 0.7rem !important;
   }
 
   /* Service/detail imagery should not dominate the viewport. */

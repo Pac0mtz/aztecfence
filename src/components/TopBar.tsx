@@ -25,11 +25,7 @@ export default function TopBar() {
           </span>
         </div>
 
-        <span className="sm:hidden text-[11px] text-gray-300 truncate">
-          Northern Illinois
-        </span>
-
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <a
             href="https://www.facebook.com/aztecfencecompanyinc1/"
             target="_blank"
