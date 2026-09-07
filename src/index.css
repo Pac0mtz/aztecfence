@@ -90,11 +90,28 @@
 .marquee-track {
   animation: marquee 55s linear infinite;
 }
-.marquee-track:hover {
-  animation-play-state: paused;
+
+.featured-marquee-wrap {
+  mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
 }
+
+.featured-marquee {
+  animation: marquee 42s linear infinite;
+}
+
+@media (max-width: 767px) {
+  .featured-marquee-wrap {
+    mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  }
+
+  .featured-marquee {
+    animation-duration: 28s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .marquee-track,
+  .featured-marquee {
     animation: none;
   }
 }
@@ -267,14 +284,15 @@
     height: auto !important;
   }
 
-  /* Featured-project marquee: show more content above the fold. */
-  .mobile-compact .marquee-track {
-    gap: 0.75rem !important;
+  /* Featured-project marquee: compact, view-only, no swipe rail. */
+  .mobile-compact .featured-marquee {
+    gap: 0.65rem !important;
     padding-left: 0.75rem !important;
   }
 
-  .mobile-compact .marquee-track > a {
-    height: 220px !important;
+  .mobile-compact .featured-card {
+    height: 176px !important;
+    width: 216px !important;
     border-radius: 0.85rem !important;
   }
 

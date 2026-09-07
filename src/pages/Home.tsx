@@ -186,23 +186,19 @@ const gateSlides: Slide[] = [
 
 function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   return (
-    <Link
-      to={img.link}
-      className="group relative block shrink-0 h-[clamp(240px,34vh,340px)] aspect-[4/3] rounded-xl overflow-hidden"
-    >
+    <div className="featured-card relative shrink-0 h-[188px] w-[236px] sm:h-[240px] sm:w-[320px] md:h-[clamp(240px,32vh,320px)] md:w-auto md:aspect-[4/3] rounded-xl overflow-hidden pointer-events-none">
       <img
         src={img.src}
         alt={img.label}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 p-4">
-        <p className="text-white font-bold text-lg">{img.label}</p>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 px-3 py-2.5 sm:p-4">
+        <p className="text-white font-bold text-sm sm:text-lg leading-snug">{img.label}</p>
       </div>
-      <div className="absolute inset-0 ring-2 ring-cyan-400/0 group-hover:ring-cyan-400/50 rounded-xl transition-all duration-300" />
-    </Link>
+    </div>
   );
 }
 
@@ -279,99 +275,21 @@ function PhotoSlider({
 }
 
 function ImageCarousel() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const velRef = useRef(0.55);
-  const dragRef = useRef<{ pointerId: number; startX: number; startScroll: number; moved: boolean } | null>(null);
-  const suppressClick = useRef(false);
   const loop = [...carouselImages, ...carouselImages];
 
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let raf = 0;
-    const tick = () => {
-      const half = el.scrollWidth / 2;
-      if (half > 0 && !dragRef.current) {
-        el.scrollLeft += velRef.current;
-        if (el.scrollLeft >= half) el.scrollLeft -= half;
-        if (el.scrollLeft < 0) el.scrollLeft += half;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY;
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      cancelAnimationFrame(raf);
-      el.removeEventListener("wheel", onWheel);
-    };
-  }, []);
-
   return (
-    <section className="bg-[#0f172a] py-14 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 mb-8">
+    <section className="bg-[#0f172a] py-10 sm:py-14 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 mb-5 sm:mb-8">
         <h2 className="text-xl md:text-2xl font-bold text-white">
           Featured <span className="text-cyan-400">Projects</span>
         </h2>
       </div>
-      <div
-        ref={scrollerRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pl-4 cursor-ew-resize"
-        onMouseLeave={() => {
-          velRef.current = 0.55;
-        }}
-        onMouseMove={(e) => {
-          if (dragRef.current) return;
-          const el = scrollerRef.current;
-          if (!el) return;
-          const x = (e.clientX - el.getBoundingClientRect().left) / el.clientWidth;
-          velRef.current = (x - 0.42) * 3.4;
-        }}
-        onPointerDown={(e) => {
-          const el = scrollerRef.current;
-          if (!el || e.pointerType === "touch") return;
-          dragRef.current = {
-            pointerId: e.pointerId,
-            startX: e.clientX,
-            startScroll: el.scrollLeft,
-            moved: false,
-          };
-          velRef.current = 0;
-          el.setPointerCapture(e.pointerId);
-        }}
-        onPointerMove={(e) => {
-          const el = scrollerRef.current;
-          const drag = dragRef.current;
-          if (!el || !drag || drag.pointerId !== e.pointerId) return;
-          const dx = e.clientX - drag.startX;
-          if (Math.abs(dx) > 6) drag.moved = true;
-          el.scrollLeft = drag.startScroll - dx;
-        }}
-        onPointerUp={(e) => {
-          const drag = dragRef.current;
-          if (drag?.moved) suppressClick.current = true;
-          dragRef.current = null;
-          if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-            e.currentTarget.releasePointerCapture(e.pointerId);
-          }
-        }}
-        onClickCapture={(e) => {
-          if (!suppressClick.current) return;
-          e.preventDefault();
-          e.stopPropagation();
-          suppressClick.current = false;
-        }}
-      >
-        {loop.map((img, i) => (
-          <ProjectCard key={`${img.src}-${i}`} img={img} />
-        ))}
+      <div className="featured-marquee-wrap overflow-hidden pointer-events-none">
+        <div className="featured-marquee flex w-max gap-3 sm:gap-4 pl-4">
+          {loop.map((img, i) => (
+            <ProjectCard key={`${img.src}-${i}`} img={img} />
+          ))}
+        </div>
       </div>
     </section>
   );

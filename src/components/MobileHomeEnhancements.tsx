@@ -3,8 +3,8 @@ import { useLocation } from "react-router-dom";
 
 /**
  * Mobile-only homepage interaction cleanup.
- * - Featured Projects stays manually swipeable but does not auto-scroll.
- * - Customer Reviews keeps smooth auto-scroll while still allowing native drag/swipe.
+ * Featured Projects is a CSS auto-marquee (view-only). This helper only
+ * keeps Customer Reviews auto-scrolling while still allowing native swipe.
  */
 export default function MobileHomeEnhancements() {
   const { pathname } = useLocation();
@@ -17,55 +17,15 @@ export default function MobileHomeEnhancements() {
 
     const setup = () => {
       const headings = Array.from(document.querySelectorAll("h2"));
-      const featuredHeading = headings.find((heading) => heading.textContent?.includes("Featured Projects"));
       const reviewsHeading = headings.find((heading) => heading.textContent?.includes("Customer Reviews"));
-
-      const featuredSection = featuredHeading?.closest("section");
-      const featuredScroller = featuredSection?.querySelector<HTMLDivElement>("div.flex.overflow-x-auto");
-
       const reviewsSection = reviewsHeading?.closest("section");
       const reviewsScroller = reviewsSection?.querySelector<HTMLDivElement>("[data-mobile-reviews-scroller]");
 
-      if (!featuredScroller || !reviewsScroller) {
+      if (!reviewsScroller) {
         if (attempts++ < 40) window.setTimeout(setup, 100);
         return;
       }
 
-      // Featured Projects: neutralize the original Home.tsx RAF motion while
-      // preserving native touch scrolling. The locked position only updates
-      // while the user is actively touching/dragging the rail.
-      let featuredTouching = false;
-      let featuredLocked = featuredScroller.scrollLeft;
-      let featuredRaf = 0;
-
-      const freezeFeatured = () => {
-        if (featuredTouching) {
-          featuredLocked = featuredScroller.scrollLeft;
-        } else if (Math.abs(featuredScroller.scrollLeft - featuredLocked) > 0.5) {
-          featuredScroller.scrollLeft = featuredLocked;
-        }
-        featuredRaf = requestAnimationFrame(freezeFeatured);
-      };
-
-      const onFeaturedTouchStart = () => {
-        featuredTouching = true;
-      };
-      const onFeaturedTouchMove = () => {
-        featuredLocked = featuredScroller.scrollLeft;
-      };
-      const onFeaturedTouchEnd = () => {
-        featuredLocked = featuredScroller.scrollLeft;
-        featuredTouching = false;
-      };
-
-      featuredScroller.addEventListener("touchstart", onFeaturedTouchStart, { passive: true });
-      featuredScroller.addEventListener("touchmove", onFeaturedTouchMove, { passive: true });
-      featuredScroller.addEventListener("touchend", onFeaturedTouchEnd, { passive: true });
-      featuredScroller.addEventListener("touchcancel", onFeaturedTouchEnd, { passive: true });
-      featuredRaf = requestAnimationFrame(freezeFeatured);
-
-      // Reviews: smooth auto-scroll, but hands off immediately while the user
-      // drags. Resume shortly after release so the rail still feels alive.
       let reviewsTouching = false;
       let reviewsResumeAt = 0;
       let reviewsLastTime = performance.now();
@@ -100,12 +60,7 @@ export default function MobileHomeEnhancements() {
       reviewsRaf = requestAnimationFrame(tickReviews);
 
       cleanup = () => {
-        cancelAnimationFrame(featuredRaf);
         cancelAnimationFrame(reviewsRaf);
-        featuredScroller.removeEventListener("touchstart", onFeaturedTouchStart);
-        featuredScroller.removeEventListener("touchmove", onFeaturedTouchMove);
-        featuredScroller.removeEventListener("touchend", onFeaturedTouchEnd);
-        featuredScroller.removeEventListener("touchcancel", onFeaturedTouchEnd);
         reviewsScroller.removeEventListener("touchstart", onReviewsTouchStart);
         reviewsScroller.removeEventListener("touchend", onReviewsTouchEnd);
         reviewsScroller.removeEventListener("touchcancel", onReviewsTouchEnd);
