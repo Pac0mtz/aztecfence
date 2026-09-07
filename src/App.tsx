@@ -3,6 +3,7 @@ import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import MobileHomeEnhancements from "./components/MobileHomeEnhancements";
 import Home from "./pages/Home";
 import Gallery from "./pages/Gallery";
 import Gates from "./pages/Gates";
@@ -28,6 +29,7 @@ export default function App() {
   return (
     <div className={`mobile-compact min-h-screen bg-white flex flex-col${isHome ? " home-route" : ""}`}>
       <ScrollToTop />
+      <MobileHomeEnhancements />
       <TopBar />
       <Navbar />
       <main className="flex-1">
