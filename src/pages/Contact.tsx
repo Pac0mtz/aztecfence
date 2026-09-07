@@ -66,9 +66,12 @@ export default function Contact() {
 
       <section className="quote-contact-section relative text-white overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images/aluminum-21.jpg" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#061424]/72 via-[#0f172a]/84 to-[#0f172a]/96" />
-          <div className="absolute inset-x-0 top-0 h-[30rem] bg-gradient-to-b from-black/55 via-[#0f172a]/28 to-transparent" />
+          <img
+            src="/images/Residential-vinyl-privacy-fence-11-1.jpg"
+            alt=""
+            className="w-full h-full object-cover scale-105"
+          />
+          <div className="absolute inset-0 bg-[#0f172a]/40 backdrop-blur-[3px]" />
         </div>
 
         <div className="relative max-w-3xl mx-auto px-3 sm:px-4 py-5 sm:py-8 md:py-12">
