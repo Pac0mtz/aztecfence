@@ -1,10 +1,18 @@
 /**
- * Google Ads helpers for Aztec Fence.
+ * Google Ads / GA4 helpers for Aztec Fence.
  *
- * Fill GOOGLE_ADS_ID (and conversion labels) from:
- * Google Ads ? Goals ? Conversions ? Tag setup ? "Install the tag yourself"
+ * The sitewide tag is the official snippet in index.html (first HTML for every
+ * route, including /thank-you/ and /contact-us/). IDs:
+ *   AW-11484223030  Google Ads
+ *   G-79HY2VCPDP    GA4 (aztecfence.net)
+ *
+ * "Book appointment" is a URL page-load conversion on the base Ads tag
+ * (URLs starting with aztecfence.net/thank-you). There is no official
+ * AW-11484223030/label, so these stay empty and this module does not send
+ * a conversion event. Do not point tracking at /thank-you/thank-you.
  */
-export const GOOGLE_ADS_ID = "";
+export const GOOGLE_ADS_ID = "AW-11484223030";
+export const GA4_MEASUREMENT_ID = "G-79HY2VCPDP";
 export const LEAD_CONVERSION_LABEL = "";
 export const PHONE_CONVERSION_LABEL = "";
 
@@ -145,13 +153,18 @@ export function initGoogleAds() {
     return false;
   };
 
-  if (GOOGLE_ADS_ID && !document.querySelector(`script[src*="gtag/js?id=${GOOGLE_ADS_ID}"]`)) {
+  // Shell snippet already called gtag('config') for Ads and GA4. Only install
+  // the same snippet if that script is missing, and do not pass extra options
+  // (enhanced conversions stay off; no second config on a normal page load).
+  const tagSrc = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`;
+  if (!document.querySelector(`script[src="${tagSrc}"]`)) {
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`;
+    script.src = tagSrc;
     document.head.appendChild(script);
     gtag("js", new Date());
-    gtag("config", GOOGLE_ADS_ID, { conversion_linker: true, allow_enhanced_conversions: true });
+    gtag("config", GOOGLE_ADS_ID);
+    gtag("config", GA4_MEASUREMENT_ID);
   }
 
   document.addEventListener("click", onTelClick);
