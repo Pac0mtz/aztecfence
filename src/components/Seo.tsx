@@ -17,6 +17,8 @@ interface SeoProps {
   image?: string;
   type?: "website" | "article";
   noindex?: boolean;
+  /** Leave the page without a canonical link. */
+  omitCanonical?: boolean;
   /** Page-specific JSON-LD (object or array). */
   jsonLd?: object | object[];
 }
@@ -32,7 +34,7 @@ function upsertMeta(attr: "name" | "property", value: string, content: string) {
 }
 
 export default function Seo({
-  title, description, path, keywords, image, type = "website", noindex, jsonLd,
+  title, description, path, keywords, image, type = "website", noindex, omitCanonical, jsonLd,
 }: SeoProps) {
   const { pathname } = useLocation();
   const canonicalPath = path ?? pathname;
@@ -49,12 +51,16 @@ export default function Seo({
     upsertMeta("name", "robots", noindex ? "noindex,nofollow" : "index,follow");
 
     let canonicalEl = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!canonicalEl) {
-      canonicalEl = document.createElement("link");
-      canonicalEl.rel = "canonical";
-      document.head.appendChild(canonicalEl);
+    if (omitCanonical) {
+      canonicalEl?.remove();
+    } else {
+      if (!canonicalEl) {
+        canonicalEl = document.createElement("link");
+        canonicalEl.rel = "canonical";
+        document.head.appendChild(canonicalEl);
+      }
+      canonicalEl.href = canonical;
     }
-    canonicalEl.href = canonical;
 
     upsertMeta("property", "og:type", type);
     upsertMeta("property", "og:site_name", SITE_NAME);
@@ -84,7 +90,7 @@ export default function Seo({
     return () => {
       document.getElementById(ldId)?.remove();
     };
-  }, [title, description, canonicalPath, keywords, image, type, noindex, ld]);
+  }, [title, description, canonicalPath, keywords, image, type, noindex, omitCanonical, ld]);
 
   return null;
 }

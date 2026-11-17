@@ -50,9 +50,9 @@ service-area list already rendered on the home page (good for local long-tail).
 
 ## Important production caveats / next steps
 
-1. **Server SPA fallback (required).** With `BrowserRouter`, the host must rewrite unknown paths
-   to `index.html` (e.g. Netlify `_redirects: /* /index.html 200`, Vercel rewrites, or Nginx
-   `try_files $uri /index.html`). Vite dev/preview already does this.
+1. **Server routing.** Production (`server/index.mjs`) serves real routes from the shared route
+   table and returns HTTP 404 for unknown paths. Do not rewrite unknown URLs to `index.html` with
+   status 200. Vite dev still falls back to the SPA shell; the not-found page is the React `*` route.
 2. **Prerender / SSR for best results.** This is a client-rendered SPA. Google renders JS, but
    prerendering each route to static HTML (e.g. `vite-plugin-ssr`/`vike`, `react-snap`, or a
    prerender step) guarantees crawlers and social scrapers see full content + meta immediately.
