@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { routePath } from "../shared/routes.mjs";
 import TopBar from "./components/TopBar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -20,6 +21,7 @@ import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ThankYou from "./pages/ThankYou";
+import NotFound from "./pages/NotFound";
 import "./mobile-home-tweaks.css";
 
 export default function App() {
@@ -34,23 +36,24 @@ export default function App() {
       <Navbar />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/photo-gallery/" element={<Gallery />} />
-          <Route path="/gates/" element={<Gates />} />
-          <Route path="/residential-fence/" element={<Residential />} />
-          <Route path="/commercial-fencing/" element={<Commercial />} />
-          <Route path="/privacy-fences/" element={<PrivacyFences />} />
-          <Route path="/chain-link-fences/" element={<ChainLinkFences />} />
-          <Route path="/aluminum-fences/" element={<AluminumFences />} />
-          <Route path="/security-fences/" element={<SecurityFences />} />
-          <Route path="/vinyl-picket-fencing/" element={<VinylPicketFencing />} />
-          <Route path="/wood-picket-fencing/" element={<WoodPicketFencing />} />
-          <Route path="/wood-picket-fences/" element={<WoodPicketFencing />} />
-          <Route path="/about-us/" element={<About />} />
-          <Route path="/contact/" element={<Contact />} />
-          <Route path="/terms-and-conditions/" element={<Terms />} />
-          <Route path="/privacy-policy/" element={<Privacy />} />
-          <Route path="/thank-you/" element={<ThankYou />} />
+          <Route path={routePath("/")} element={<Home />} />
+          <Route path={routePath("/photo-gallery/")} element={<Gallery />} />
+          <Route path={routePath("/gates/")} element={<Gates />} />
+          <Route path={routePath("/residential-fence/")} element={<Residential />} />
+          <Route path={routePath("/commercial-fencing/")} element={<Commercial />} />
+          <Route path={routePath("/privacy-fences/")} element={<PrivacyFences />} />
+          <Route path={routePath("/chain-link-fences/")} element={<ChainLinkFences />} />
+          <Route path={routePath("/aluminum-fences/")} element={<AluminumFences />} />
+          <Route path={routePath("/security-fences/")} element={<SecurityFences />} />
+          <Route path={routePath("/vinyl-picket-fencing/")} element={<VinylPicketFencing />} />
+          <Route path={routePath("/wood-picket-fencing/")} element={<WoodPicketFencing />} />
+          <Route path={routePath("/wood-picket-fences/")} element={<WoodPicketFencing />} />
+          <Route path={routePath("/about-us/")} element={<About />} />
+          <Route path={routePath("/contact/")} element={<Contact />} />
+          <Route path={routePath("/terms-and-conditions/")} element={<Terms />} />
+          <Route path={routePath("/privacy-policy/")} element={<Privacy />} />
+          <Route path={routePath("/thank-you/")} element={<ThankYou />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

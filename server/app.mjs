@@ -2,27 +2,12 @@ import express from "express";
 import multer from "multer";
 import nodemailer from "nodemailer";
 import sharp from "sharp";
-import { appendOriginalQuery, canonicalHostRedirect, legacyRedirectPath } from "./redirects.mjs";
+import { installRedirects } from "./redirects.mjs";
 
 const app = express();
 
 // One hop: Hostinger's proxy. Do not trust a client-supplied chain.
-app.set("trust proxy", 1);
-
-app.use((req, res, next) => {
-  const hostTarget = canonicalHostRedirect({
-    hostHeader: req.headers.host,
-    forwardedProto: req.get("x-forwarded-proto"),
-    originalUrl: req.originalUrl,
-    path: req.path,
-  });
-  if (hostTarget) return res.redirect(301, hostTarget);
-
-  const legacy = legacyRedirectPath(req.path);
-  if (legacy) return res.redirect(301, appendOriginalQuery(legacy, req.originalUrl));
-
-  next();
-});
+installRedirects(app);
 
 app.use(express.json({ limit: "50kb" }));
 

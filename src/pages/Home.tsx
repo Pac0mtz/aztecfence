@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { SERVICE_AREAS } from "../../shared/service-areas.mjs";
 import Seo from "../components/Seo";
 import { motion } from "framer-motion";
 import { Phone, Check, ArrowRight, Star, Shield, Users, Award, Quote } from "lucide-react";
@@ -108,28 +109,7 @@ const services = [
 
 const GOOGLE_PROFILE_URL = "https://maps.app.goo.gl/8dDyVNupUfeKmvx77";
 
-const serviceAreas = [
-  {
-    state: "Illinois",
-    places: [
-      "Lake County",
-      "Round Lake",
-      "Grayslake",
-      "McHenry",
-      "Huntley",
-      "Woodstock",
-      "Highland Park",
-      "Wilmette",
-      "Kenilworth",
-      "Winnetka",
-      "Evanston",
-    ],
-  },
-  {
-    state: "Wisconsin",
-    places: ["Kenosha", "Pleasant Prairie", "Lake Geneva", "Delavan"],
-  },
-];
+const serviceAreas = SERVICE_AREAS;
 
 const reviews = [
   {
@@ -856,9 +836,9 @@ export default function Home() {
             {serviceAreas.map((group) => (
               <div key={group.state}>
                 <h3 className="text-sm font-bold uppercase tracking-widest text-cyan-600 mb-3">{group.state}</h3>
-                <ul className="space-y-1.5 text-gray-700 leading-relaxed">
+                <ul className="columns-2 md:columns-3 gap-x-8 text-gray-700 leading-relaxed">
                   {group.places.map((place) => (
-                    <li key={place}>{place}</li>
+                    <li key={place} className="break-inside-avoid py-0.5">{place}</li>
                   ))}
                 </ul>
               </div>

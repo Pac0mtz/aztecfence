@@ -56,13 +56,31 @@ test("legacy aliases redirect with and without a trailing slash", () => {
     ["/vinyl-fencing/", "/vinyl-picket-fencing/"],
     ["/aluminum-fencing", "/aluminum-fences/"],
     ["/aluminum-fencing/", "/aluminum-fences/"],
+    ["/gallery", "/photo-gallery/"],
+    ["/gallery/", "/photo-gallery/"],
+    ["/about", "/about-us/"],
+    ["/about/", "/about-us/"],
+    ["/get-a-quote", "/contact/"],
+    ["/get-a-quote/", "/contact/"],
+    ["/free-quote", "/contact/"],
+    ["/free-quote/", "/contact/"],
+    ["/wood-fencing", "/wood-picket-fencing/"],
+    ["/wood-fencing/", "/wood-picket-fencing/"],
   ];
   for (const [from, to] of cases) {
     assert.equal(legacyRedirectPath(from), to, from);
   }
-  for (const keep of ["/thank-you/", "/contact/", "/vinyl-picket-fencing/", "/aluminum-fences/", "/"]) {
+  for (const keep of ["/", "/thank-you/", "/contact/", "/photo-gallery/", "/about-us/", "/wood-picket-fencing/", "/vinyl-picket-fencing/", "/aluminum-fences/"]) {
     assert.equal(legacyRedirectPath(keep), null, keep);
   }
+  assert.equal(
+    appendOriginalQuery(legacyRedirectPath("/wood-fencing/"), "/wood-fencing/?ref=ad"),
+    "/wood-picket-fencing/?ref=ad",
+  );
+  assert.equal(
+    appendOriginalQuery(legacyRedirectPath("/gallery"), "/gallery?utm=1"),
+    "/photo-gallery/?utm=1",
+  );
 });
 
 test("legacy redirects keep the query string", () => {
@@ -217,6 +235,48 @@ test("Express responds with 301s for host and legacy paths", async () => {
       host: "aztecfence.net",
       proto: "https",
       location: "/aluminum-fences/",
+    },
+    {
+      path: "/gallery",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/photo-gallery/",
+    },
+    {
+      path: "/gallery/?utm=1",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/photo-gallery/?utm=1",
+    },
+    {
+      path: "/about/",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/about-us/",
+    },
+    {
+      path: "/get-a-quote",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/contact/",
+    },
+    {
+      path: "/free-quote/",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/contact/",
+    },
+    {
+      path: "/wood-fencing?ref=ad",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/wood-picket-fencing/?ref=ad",
+    },
+    {
+      path: "/wood-fencing/",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/wood-picket-fencing/",
     },
   ];
 

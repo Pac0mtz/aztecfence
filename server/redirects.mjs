@@ -9,6 +9,11 @@ const LEGACY_PATHS = new Map([
   ["/book-a-free-consultation", "/contact/"],
   ["/vinyl-fencing", "/vinyl-picket-fencing/"],
   ["/aluminum-fencing", "/aluminum-fences/"],
+  ["/gallery", "/photo-gallery/"],
+  ["/about", "/about-us/"],
+  ["/get-a-quote", "/contact/"],
+  ["/free-quote", "/contact/"],
+  ["/wood-fencing", "/wood-picket-fencing/"],
 ]);
 
 export function legacyRedirectPath(pathname) {
@@ -49,11 +54,33 @@ export function canonicalHostRedirect({ hostHeader, forwardedProto, originalUrl,
   return `https://aztecfence.net${url}`;
 }
 
-export function applyRobotsMeta(html, pathname) {
-  if (pathname !== "/thank-you/") return html;
-  const tag = `<meta name="robots" content="noindex, nofollow"`;
+export function setRobots(html, content) {
+  const tag = `<meta name="robots" content="${content}"`;
   if (/<meta name="robots" content="[^"]*"/.test(html)) {
     return html.replace(/<meta name="robots" content="[^"]*"/, tag);
   }
   return html.replace("</head>", `${tag}>\n</head>`);
+}
+
+export function applyRobotsMeta(html, pathname) {
+  if (pathname !== "/thank-you/") return html;
+  return setRobots(html, "noindex, nofollow");
+}
+
+export function installRedirects(app) {
+  app.set("trust proxy", 1);
+  app.use((req, res, next) => {
+    const hostTarget = canonicalHostRedirect({
+      hostHeader: req.headers.host,
+      forwardedProto: req.get("x-forwarded-proto"),
+      originalUrl: req.originalUrl,
+      path: req.path,
+    });
+    if (hostTarget) return res.redirect(301, hostTarget);
+
+    const legacy = legacyRedirectPath(req.path);
+    if (legacy) return res.redirect(301, appendOriginalQuery(legacy, req.originalUrl));
+
+    next();
+  });
 }
