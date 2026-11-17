@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
 import app from "./app.mjs";
+import { applyRobotsMeta } from "./redirects.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.resolve(__dirname, "..", "dist");
@@ -111,6 +112,7 @@ function applyMeta(html, pathname, meta) {
     /<meta property="og:url" content="[^"]*"/,
     `<meta property="og:url" content="${canonical}"`,
   );
+  out = applyRobotsMeta(out, pathname);
 
   const extra =
     pathname === "/privacy-policy/"

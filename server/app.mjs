@@ -2,15 +2,25 @@ import express from "express";
 import multer from "multer";
 import nodemailer from "nodemailer";
 import sharp from "sharp";
+import { appendOriginalQuery, canonicalHostRedirect, legacyRedirectPath } from "./redirects.mjs";
 
 const app = express();
 
+// One hop: Hostinger's proxy. Do not trust a client-supplied chain.
+app.set("trust proxy", 1);
+
 app.use((req, res, next) => {
-  const host = (req.headers.host || "").split(":")[0];
-  // Keep /api on www so quote POSTs are not turned into GETs by a 301.
-  if (host === "www.aztecfence.net" && !req.path.startsWith("/api/")) {
-    return res.redirect(301, `https://aztecfence.net${req.originalUrl}`);
-  }
+  const hostTarget = canonicalHostRedirect({
+    hostHeader: req.headers.host,
+    forwardedProto: req.get("x-forwarded-proto"),
+    originalUrl: req.originalUrl,
+    path: req.path,
+  });
+  if (hostTarget) return res.redirect(301, hostTarget);
+
+  const legacy = legacyRedirectPath(req.path);
+  if (legacy) return res.redirect(301, appendOriginalQuery(legacy, req.originalUrl));
+
   next();
 });
 

@@ -94,10 +94,23 @@
             "latitude": 42.3536,
             "longitude": -88.0934
           },
-          "areaServed": {
-            "@type": "AdministrativeArea",
-            "name": "Northern Illinois (Lake County & surrounding areas)"
-          },
+          "areaServed": [
+            { "@type": "AdministrativeArea", "name": "Lake County", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Round Lake", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Grayslake", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "McHenry", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Huntley", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Woodstock", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Highland Park", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Wilmette", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Kenilworth", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Winnetka", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Evanston", "containedInPlace": "Illinois" },
+            { "@type": "City", "name": "Kenosha", "containedInPlace": "Wisconsin" },
+            { "@type": "City", "name": "Pleasant Prairie", "containedInPlace": "Wisconsin" },
+            { "@type": "City", "name": "Lake Geneva", "containedInPlace": "Wisconsin" },
+            { "@type": "City", "name": "Delavan", "containedInPlace": "Wisconsin" }
+          ],
           "openingHoursSpecification": [
             {
               "@type": "OpeningHoursSpecification",
@@ -112,11 +125,6 @@
               "closes": "11:00"
             }
           ],
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "106"
-          },
           "makesOffer": [
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Aluminum Fence Installation" } },
             { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vinyl Fence Installation" } },

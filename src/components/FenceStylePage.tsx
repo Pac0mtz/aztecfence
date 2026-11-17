@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import {
   Check, ArrowRight, Phone, Shield, Award, Clock, DollarSign,
-  Star, ChevronRight, PencilRuler, HardHat, ClipboardCheck, Sparkles, ArrowUpRight,
+  ChevronRight, PencilRuler, HardHat, ClipboardCheck, Sparkles, ArrowUpRight,
 } from "lucide-react";
 import Seo, { SITE_URL } from "./Seo";
 
@@ -154,13 +154,17 @@ export default function FenceStylePage({
               </nav>
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4">{title} <span className="text-cyan-400">Fences</span></h1>
               <p className="text-gray-300 max-w-2xl text-lg">{subtitle}</p>
-              {/* Rating / trust line */}
-              <div className="flex items-center gap-2 mt-5 text-sm text-gray-300">
-                <span className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={15} className="text-yellow-400 fill-yellow-400" />)}
-                </span>
-                <span>Rated 4.9 by 106+ Google reviews · 30+ years in Northern Illinois</span>
-              </div>
+              <p className="mt-5 text-sm text-gray-300">
+                <a
+                  href="https://maps.app.goo.gl/8dDyVNupUfeKmvx77"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-white/40 underline-offset-4 hover:text-cyan-300"
+                >
+                  See our reviews on Google
+                </a>
+                <span> · 30+ years in Northern Illinois</span>
+              </p>
               <div className="flex flex-wrap gap-4 mt-8">
                 <Link to="/contact/" className="px-8 py-3.5 btn-primary font-bold rounded-full hover:brightness-110 transition-all hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30">Free Consultation</Link>
                 <a href="tel:8477404655" className="px-8 py-3.5 border-2 border-white/60 text-white font-bold rounded-full hover:bg-white hover:text-[#0f172a] transition-all hover:scale-105">Call (847) 740-4655</a>

@@ -9,6 +9,7 @@
     "prebuild": "node scripts/generate-thumbs.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "node --test test/*.test.mjs",
     "preview": "vite preview",
     "start": "node server/index.mjs"
   },
