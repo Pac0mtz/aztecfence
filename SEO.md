@@ -40,7 +40,7 @@ service-area list already rendered on the home page (good for local long-tail).
 - **Real, indexable URLs** — switched `HashRouter` → `BrowserRouter` (was `/#/…`, now `/…`).
 - **Per-page `<title>`, meta description, canonical, Open Graph & Twitter** via `src/components/Seo.tsx`.
 - **Structured data (JSON-LD):**
-  - Site-wide `GeneralContractor`/`LocalBusiness` + `WebSite` (static in `index.html` — crawlable without JS) with NAP, geo, hours, `aggregateRating`, and `makesOffer`.
+  - Site-wide `GeneralContractor`/`LocalBusiness` + `WebSite` (static in `index.html` — crawlable without JS) with NAP, geo, hours, `areaServed`, and `makesOffer`. No self-reported `AggregateRating` or `Review` markup.
   - Per page: `Service`, `FAQPage`, `BreadcrumbList`, `ImageGallery`, `AboutPage`, `ContactPage`.
 - **`robots.txt`** + **`sitemap.xml`** in `public/`.
 - **Performance (ranking factor):** images capped at 1280px, WebP grid thumbnails with JPEG
@@ -59,6 +59,6 @@ service-area list already rendered on the home page (good for local long-tail).
 3. **Set the real canonical domain** if not `aztecfence.net` (currently the canonical base in
    `Seo.tsx`, `index.html`, `robots.txt`, and `sitemap.xml`).
 4. **Off-page (highest local-SEO leverage):** Google Business Profile (categories, photos,
-   reviews, posts), consistent NAP citations, and local backlinks. Keep the on-site
-   `aggregateRating` in sync with the real review count.
+   reviews, posts), consistent NAP citations, and local backlinks. Do not put a
+   self-reported star rating or review count back into the page or the JSON-LD.
 5. Add a real OG share image (1200×630) and per-page OG images for richer social previews.

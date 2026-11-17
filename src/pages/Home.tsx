@@ -106,15 +106,29 @@ const services = [
   },
 ];
 
-const areas = [
-  "Antioch", "Bannockburn", "Barrington", "Beach Park", "Buffalo Grove", "Deerfield",
-  "Fox Lake", "Grayslake", "Green Oaks", "Gurnee", "Hainesville", "Highland Park",
-  "Highwood", "Indian Creek", "Island Lake", "Kildeer", "Lake Barrington", "Lake Bluff",
-  "Lake Forest", "Lake Villa", "Lake Zurich", "Libertyville", "Lincolnshire", "Lindenhurst",
-  "Long Grove", "Mettawa", "Mundelein", "North Barrington", "Old Mill Creek", "Park City",
-  "Port Barrington", "Riverwoods", "Round Lake", "Round Lake Beach", "Round Lake Heights",
-  "Round Lake Park", "Tower Lakes", "Vernon Hills", "Volo", "Wadsworth", "Wauconda",
-  "Waukegan", "Wilmette", "Winthrop Harbor", "Zion",
+const GOOGLE_PROFILE_URL = "https://maps.app.goo.gl/8dDyVNupUfeKmvx77";
+
+const serviceAreas = [
+  {
+    state: "Illinois",
+    places: [
+      "Lake County",
+      "Round Lake",
+      "Grayslake",
+      "McHenry",
+      "Huntley",
+      "Woodstock",
+      "Highland Park",
+      "Wilmette",
+      "Kenilworth",
+      "Winnetka",
+      "Evanston",
+    ],
+  },
+  {
+    state: "Wisconsin",
+    places: ["Kenosha", "Pleasant Prairie", "Lake Geneva", "Delavan"],
+  },
 ];
 
 const reviews = [
@@ -537,7 +551,16 @@ export default function Home() {
             <h2 className="text-3xl md:text-5xl font-bold text-[#0f172a]">
               Customer <span className="text-cyan-600">Reviews</span>
             </h2>
-            <p className="text-gray-500 mt-3">Aztec Fence Company, Inc. - 106 Google reviews</p>
+            <p className="text-gray-500 mt-3">
+              <a
+                href={GOOGLE_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-gray-300 underline-offset-4 hover:text-cyan-600"
+              >
+                See our reviews on Google
+              </a>
+            </p>
           </motion.div>
         </div>
 
@@ -596,12 +619,11 @@ export default function Home() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-[#0f172a]/95 to-blue-900/90" />
         <div className="relative max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
             {[
               { icon: Award, end: 30, suffix: "", label: "Years In Business" },
               { icon: Shield, end: 25, suffix: "K+", label: "Projects Done" },
               { icon: Users, end: 41, suffix: "+", label: "Professional Experts" },
-              { icon: Star, end: 49, suffix: "", label: "Customer Rating", decimal: true },
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
@@ -618,14 +640,8 @@ export default function Home() {
                   <stat.icon size={36} className="text-cyan-400 mb-3" />
                 </motion.div>
                 <p className="text-5xl md:text-6xl font-bold">
-                  {stat.decimal ? (
-                    <AnimatedCounter end={stat.end} suffix={stat.suffix} />
-                  ) : (
-                    <>
-                      <AnimatedCounter end={stat.end} />
-                      {stat.suffix}
-                    </>
-                  )}
+                  <AnimatedCounter end={stat.end} />
+                  {stat.suffix}
                 </p>
                 <p className="text-gray-400 text-sm mt-2 font-medium">{stat.label}</p>
               </motion.div>
@@ -827,39 +843,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Areas We Serve — Animated pills */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold text-[#0f172a]">Areas We Serve</h2>
+      <section className="py-20 bg-white" aria-labelledby="service-areas-heading">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 id="service-areas-heading" className="text-3xl md:text-5xl font-bold text-[#0f172a]">
+              Service areas
+            </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto mt-4 rounded-full" />
-            <p className="text-gray-500 mt-3">Proudly serving Northern Illinois communities</p>
-          </motion.div>
-          <div className="flex flex-wrap justify-center gap-3">
-            {areas.map((area, idx) => (
-              <motion.div
-                key={area}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.015, duration: 0.3 }}
-                whileHover={{ scale: 1.08, y: -2 }}
-                className={`px-4 py-2.5 bg-gradient-to-r from-gray-50 to-white rounded-full border border-gray-200 text-sm text-gray-600 hover:border-cyan-300 hover:text-cyan-600 hover:shadow-md hover:shadow-cyan-100/50 transition-all cursor-default ${
-                  idx >= 8 ? "hidden md:block" : ""
-                }`}
-              >
-                {area} Fencing
-              </motion.div>
+            <p className="text-gray-500 mt-3">Fence installation across northern Illinois and southern Wisconsin.</p>
+          </div>
+          <div className="space-y-8">
+            {serviceAreas.map((group) => (
+              <div key={group.state}>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-cyan-600 mb-3">{group.state}</h3>
+                <ul className="space-y-1.5 text-gray-700 leading-relaxed">
+                  {group.places.map((place) => (
+                    <li key={place}>{place}</li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
-          <p className="md:hidden text-center text-sm text-gray-500 mt-5">
-            Plus {areas.length - 8} more communities across Northern Illinois
-          </p>
         </div>
       </section>
 
