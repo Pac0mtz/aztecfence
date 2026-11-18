@@ -8,6 +8,8 @@ import {
   appendOriginalQuery,
   applyRobotsMeta,
   canonicalHostRedirect,
+  homepageSearchRedirect,
+  isWordpressGonePath,
   legacyRedirectPath,
 } from "../server/redirects.mjs";
 
@@ -67,6 +69,8 @@ test("legacy aliases redirect with and without a trailing slash", () => {
     ["/free-quote/", "/contact/"],
     ["/wood-fencing", "/wood-picket-fencing/"],
     ["/wood-fencing/", "/wood-picket-fencing/"],
+    ["/wood-picket-fences", "/wood-picket-fencing/"],
+    ["/wood-picket-fences/", "/wood-picket-fencing/"],
   ];
   for (const [from, to] of cases) {
     assert.equal(legacyRedirectPath(from), to, from);
@@ -82,6 +86,72 @@ test("legacy aliases redirect with and without a trailing slash", () => {
     appendOriginalQuery(legacyRedirectPath("/gallery"), "/gallery?utm=1"),
     "/photo-gallery/?utm=1",
   );
+});
+
+test("homepage ?s= redirects to / and other homepage queries do not", () => {
+  assert.equal(homepageSearchRedirect("/", "/?s=anything"), "/");
+  assert.equal(homepageSearchRedirect("/", "/?s="), "/");
+  assert.equal(homepageSearchRedirect("/", "/?s"), "/");
+  assert.equal(homepageSearchRedirect("/", "/?s=cedar%20fence"), "/");
+  assert.equal(homepageSearchRedirect("/", "/?s=fence&utm_source=google&gclid=abc"), "/");
+  assert.equal(homepageSearchRedirect("/", "/?utm_source=google&s="), "/");
+  assert.equal(homepageSearchRedirect("/?s=fence"), "/");
+  assert.equal(homepageSearchRedirect("/", "/"), null);
+  assert.equal(homepageSearchRedirect("/", "/?gclid=abc"), null);
+  assert.equal(homepageSearchRedirect("/", "/?utm_source=google&utm_medium=cpc&utm_campaign=spring"), null);
+  assert.equal(homepageSearchRedirect("/", "/?ss=fence"), null);
+  assert.equal(homepageSearchRedirect("/", "/?S=fence"), null);
+  assert.equal(homepageSearchRedirect("/contact/", "/contact/?s=fence"), null);
+  assert.equal(homepageSearchRedirect("/wood-picket-fences/", "/wood-picket-fences/?s=fence"), null);
+});
+
+test("WordPress junk paths are gone and unknown paths are not", () => {
+  const gone = [
+    "/wp-admin",
+    "/wp-admin/",
+    "/wp-admin/admin-ajax.php",
+    "/WP-Admin/Admin-Ajax.php",
+    "/wp-content",
+    "/wp-content/uploads/2020/01/fence.jpg",
+    "/wp-includes/js/jquery/jquery.min.js",
+    "/wp-json",
+    "/wp-json/wp/v2/posts",
+    "/feed",
+    "/feed/",
+    "/feed/rss/",
+    "/hello-world/feed/",
+    "/privacy-fences/feed",
+    "/tag",
+    "/tag/cedar/",
+    "/category/fencing/",
+    "/category/fencing/feed/",
+    "/author/admin/",
+    "/xmlrpc.php",
+    "/xmlrpc.php/",
+    "/wp-login.php",
+    "/%77p-login.php",
+  ];
+  for (const path of gone) assert.equal(isWordpressGonePath(path), true, path);
+
+  const keep = [
+    "/",
+    "/contact/",
+    "/thank-you/",
+    "/terms-and-conditions/",
+    "/wood-picket-fencing/",
+    "/wood-picket-fences/",
+    "/not-a-page",
+    "/hello-world/",
+    "/wp-cron.php",
+    "/feedback/",
+    "/categories/fencing/",
+    "/tags/cedar/",
+    "/authors/admin/",
+    "/feeds/main/",
+    "/api/contact",
+    "/images/logo.png",
+  ];
+  for (const path of keep) assert.equal(isWordpressGonePath(path), false, path);
 });
 
 test("legacy redirects keep the query string", () => {
@@ -279,6 +349,60 @@ test("Express responds with 301s for host and legacy paths", async () => {
       proto: "https",
       location: "/wood-picket-fencing/",
     },
+    {
+      path: "/wood-picket-fences/",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/wood-picket-fencing/",
+    },
+    {
+      path: "/wood-picket-fences/?ref=ad",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/wood-picket-fencing/?ref=ad",
+    },
+    {
+      path: "/?s=anything",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/",
+    },
+    {
+      path: "/?s=fence&gclid=abc&utm_source=google",
+      host: "aztecfence.net",
+      proto: "https",
+      location: "/",
+    },
+    {
+      path: "/?s=fence",
+      host: "www.aztecfence.net",
+      proto: "https",
+      location: "https://aztecfence.net/",
+    },
+    {
+      path: "/?s=fence",
+      host: "aztecfence.net",
+      proto: "http",
+      location: "https://aztecfence.net/",
+    },
+    {
+      path: "/?s=fence",
+      host: "localhost:3000",
+      proto: "http",
+      location: "/",
+    },
+    {
+      path: "/?gclid=abc",
+      host: "www.aztecfence.net",
+      proto: "https",
+      location: "https://aztecfence.net/?gclid=abc",
+    },
+    {
+      path: "/?utm_source=google&utm_medium=cpc",
+      host: "aztecfence.net",
+      proto: "http",
+      location: "https://aztecfence.net/?utm_source=google&utm_medium=cpc",
+    },
   ];
 
   for (const item of cases) {
@@ -290,6 +414,14 @@ test("Express responds with 301s for host and legacy paths", async () => {
   const local = await request({ path: "/", host: "localhost:3000", proto: "http" });
   assert.notEqual(local.status, 301);
   assert.equal(local.location, null);
+
+  const gclid = await request({ path: "/?gclid=abc", host: "aztecfence.net", proto: "https" });
+  assert.notEqual(gclid.status, 301);
+  assert.equal(gclid.location, null);
+
+  const utm = await request({ path: "/?utm_source=google&utm_medium=cpc&utm_campaign=spring", host: "aztecfence.net", proto: "https" });
+  assert.notEqual(utm.status, 301);
+  assert.equal(utm.location, null);
 
   const api = await request({ path: "/api/contact", host: "www.aztecfence.net", proto: "http" });
   assert.notEqual(api.status, 301);
@@ -321,6 +453,8 @@ test("public files keep the ads tag, drop the fake rating, and omit the thank-yo
 
   const robots = fs.readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8");
   assert.equal(robots.includes("Disallow"), false);
+  assert.equal(/thank-you/i.test(robots), false);
+  assert.equal(/terms/i.test(robots), false);
   assert.match(robots, /User-agent: AdsBot-Google\nAllow: \//);
   assert.match(robots, /User-agent: AdsBot-Google-Mobile\nAllow: \//);
 });

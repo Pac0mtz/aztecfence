@@ -31,6 +31,48 @@ export function appendOriginalQuery(targetPath, originalUrl) {
   return targetPath + raw.slice(q);
 }
 
+const WORDPRESS_PREFIXES = ["/wp-admin", "/wp-content", "/wp-includes", "/wp-json", "/tag", "/category", "/author"];
+const WORDPRESS_FILES = new Set(["/xmlrpc.php", "/wp-login.php"]);
+
+/**
+ * Old WordPress URLs Google still requests. Matched case-insensitively, with
+ * or without a trailing slash. Real unknown paths return false and stay 404.
+ */
+export function isWordpressGonePath(pathname) {
+  const pathOnly = String(pathname || "").split("?")[0].split("#")[0];
+  let decoded = pathOnly;
+  try {
+    decoded = decodeURIComponent(pathOnly);
+  } catch {
+    decoded = pathOnly;
+  }
+  const collapsed = decoded.toLowerCase().replace(/\/{2,}/g, "/");
+  if (!collapsed.startsWith("/")) return false;
+  const trimmed = collapsed.replace(/\/+$/, "") || "/";
+  if (WORDPRESS_FILES.has(trimmed)) return true;
+  if (WORDPRESS_PREFIXES.some((prefix) => trimmed === prefix || trimmed.startsWith(`${prefix}/`))) return true;
+  return trimmed.split("/").filter(Boolean).includes("feed");
+}
+
+/**
+ * WordPress homepage search (?s=) should not be a second indexable URL.
+ * Only the bare homepage is redirected, and only when the s parameter is
+ * present. Other homepage queries (gclid, utm_*) are left alone.
+ * Returns "/" or null.
+ */
+export function homepageSearchRedirect(pathname, originalUrl) {
+  const raw = originalUrl ? String(originalUrl) : String(pathname || "/");
+  const hash = raw.indexOf("#");
+  const withoutHash = hash === -1 ? raw : raw.slice(0, hash);
+  const q = withoutHash.indexOf("?");
+  const pathOnly = q === -1 ? withoutHash : withoutHash.slice(0, q);
+  if (pathOnly !== "/") return null;
+  if (q === -1) return null;
+  const params = new URLSearchParams(withoutHash.slice(q + 1));
+  if (!params.has("s")) return null;
+  return "/";
+}
+
 /**
  * 301 target for the public site, or null when the request should be served.
  * Only an explicit x-forwarded-proto of "http" triggers the HTTPS redirect.
@@ -72,13 +114,15 @@ export function applyRobotsMeta(html, pathname) {
 export function installRedirects(app) {
   app.set("trust proxy", 1);
   app.use((req, res, next) => {
+    const searchTarget = homepageSearchRedirect(req.path, req.originalUrl);
     const hostTarget = canonicalHostRedirect({
       hostHeader: req.headers.host,
       forwardedProto: req.get("x-forwarded-proto"),
-      originalUrl: req.originalUrl,
+      originalUrl: searchTarget || req.originalUrl,
       path: req.path,
     });
     if (hostTarget) return res.redirect(301, hostTarget);
+    if (searchTarget) return res.redirect(301, searchTarget);
 
     const legacy = legacyRedirectPath(req.path);
     if (legacy) return res.redirect(301, appendOriginalQuery(legacy, req.originalUrl));

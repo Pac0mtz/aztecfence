@@ -146,6 +146,103 @@ test("unknown routes are HTTP 404 pages, and real routes stay 200", async () => 
   assert.equal(hidden.status, 404);
 });
 
+test("old WordPress URLs are 410 Gone and still noindex", async () => {
+  const gone = [
+    "/wp-admin",
+    "/wp-admin/",
+    "/wp-admin/admin-ajax.php",
+    "/wp-admin/admin-ajax.php?action=heartbeat",
+    "/WP-Admin/Admin-Ajax.php",
+    "/wp-content/",
+    "/wp-content/uploads/2020/01/fence.jpg",
+    "/wp-includes/",
+    "/wp-includes/js/jquery/jquery.min.js",
+    "/wp-json/",
+    "/wp-json/wp/v2/posts",
+    "/feed/",
+    "/feed",
+    "/feed/rss/",
+    "/hello-world/feed/",
+    "/privacy-fences/feed/",
+    "/tag/cedar/",
+    "/tag/cedar",
+    "/category/fencing/",
+    "/category/fencing/feed/",
+    "/author/admin/",
+    "/author/admin",
+    "/xmlrpc.php",
+    "/xmlrpc.php?rsd",
+    "/wp-login.php",
+    "/wp-login.php?redirect_to=%2F",
+  ];
+  for (const urlPath of gone) {
+    const res = await request({ path: urlPath });
+    assert.equal(res.status, 410, urlPath);
+    assert.match(res.type, /html/, urlPath);
+    assert.equal(res.robots, "noindex, nofollow", urlPath);
+    assert.match(res.body, /noindex, nofollow/, urlPath);
+    assert.equal(res.body.includes('rel="canonical"'), false, urlPath);
+    assert.match(res.body, /gtag\('config', 'AW-11484223030'\)/, urlPath);
+    assert.match(res.body, /gtag\('config', 'G-79HY2VCPDP'\)/, urlPath);
+  }
+
+  const postAjax = await request({ method: "POST", path: "/wp-admin/admin-ajax.php" });
+  assert.equal(postAjax.status, 410);
+  assert.equal(postAjax.robots, "noindex, nofollow");
+  assert.match(postAjax.body, /noindex, nofollow/);
+
+  const stillMissing = [
+    "/not-a-page",
+    "/hello-world/",
+    "/wp-cron.php",
+    "/feedback/",
+    "/categories/fencing/",
+    "/tags/cedar/",
+    "/authors/admin/",
+  ];
+  for (const urlPath of stillMissing) {
+    const res = await request({ path: urlPath });
+    assert.equal(res.status, 404, urlPath);
+    assert.match(res.body, /noindex, nofollow/, urlPath);
+    assert.equal(res.robots, "", urlPath);
+  }
+});
+
+test("homepage search queries 301 to / and other homepage queries stay indexable", async () => {
+  const searches = [
+    "/?s=anything",
+    "/?s=",
+    "/?s",
+    "/?s=cedar%20fence",
+    "/?s=fence&utm_source=google",
+    "/?gclid=abc&s=fence",
+    "/?utm_source=google&s=",
+  ];
+  for (const urlPath of searches) {
+    const res = await request({ path: urlPath });
+    assert.equal(res.status, 301, urlPath);
+    assert.equal(res.location, "/", urlPath);
+  }
+
+  const gclid = await request({ path: "/?gclid=TeSt123" });
+  assert.equal(gclid.status, 200);
+  assert.equal(gclid.location, null);
+  assert.match(gclid.body, /rel="canonical" href="https:\/\/aztecfence\.net\/"/);
+  assert.match(gclid.body, /name="robots" content="index, follow"/);
+  assert.match(gclid.body, /gtag\('config', 'AW-11484223030'\)/);
+  assert.match(gclid.body, /gtag\('config', 'G-79HY2VCPDP'\)/);
+
+  const utm = await request({ path: "/?utm_source=google&utm_medium=cpc&utm_campaign=spring" });
+  assert.equal(utm.status, 200);
+  assert.equal(utm.location, null);
+  assert.match(utm.body, /rel="canonical" href="https:\/\/aztecfence\.net\/"/);
+  assert.match(utm.body, /name="robots" content="index, follow"/);
+
+  const contact = await request({ path: "/contact/?s=fence" });
+  assert.equal(contact.status, 200);
+  assert.match(contact.body, /rel="canonical" href="https:\/\/aztecfence\.net\/contact\/"/);
+});
+
 test("new aliases 301 and static files, sitemap, robots, and the API stay up", async () => {
   const cases = [
     ["/gallery", "/photo-gallery/"],
