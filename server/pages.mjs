@@ -2,7 +2,7 @@ import express from "express";
 import { PAGES } from "../shared/routes.mjs";
 import { landingByPath, landingJsonLd } from "../shared/landings.mjs";
 import { thankYouGuardScript } from "../shared/ads-tracking.mjs";
-import { applyRobotsMeta, setRobots } from "./redirects.mjs";
+import { applyRobotsMeta, isWordpressGonePath, setRobots } from "./redirects.mjs";
 
 const SITE = "https://aztecfence.net";
 
@@ -116,7 +116,18 @@ export function renderNotFound(html, pathname) {
   return out;
 }
 
+function sendGone(res, html, pathname) {
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  res.status(410).type("html").send(renderNotFound(html, normalizePath(pathname)));
+}
+
 export function installPages(app, { distDir, html }) {
+  // WordPress leftovers are gone. Checked before static files so a stray
+  // upload cannot be served, and for every method (admin-ajax is a POST).
+  app.use((req, res, next) => {
+    if (!isWordpressGonePath(req.path)) return next();
+    sendGone(res, html, req.path);
+  });
   // dotfiles stay ignored (404). A trailing-slash directory must not surface as 403.
   app.use(express.static(distDir, { index: false, dotfiles: "ignore", redirect: false, fallthrough: true }));
   app.get(/^\/(?!api\/).*/, (req, res) => {
