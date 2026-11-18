@@ -31,6 +31,7 @@ interface FenceStylePageProps {
   intro2?: string;
   features?: Feature[];
   faqs?: FAQ[];
+  extraLinks?: { to: string; label: string }[];
 }
 
 const DEFAULT_FEATURES: Feature[] = [
@@ -59,12 +60,16 @@ function FenceImage({
   loading?: "lazy" | "eager";
   priority?: boolean;
 }) {
+  const webp = priority
+    ? optimizedWebp(src, 1280)
+    : src.replace("/images/", "/images/thumbs/").replace(/\.jpe?g$/i, ".webp");
+  const fallback = priority ? src : src.replace("/images/", "/images/thumbs/").replace(/\.jpe?g$/i, ".jpg");
   return (
     <picture className="block h-full w-full">
-      <source media="(max-width: 767px)" srcSet={optimizedWebp(src, 640)} type="image/webp" />
-      <source srcSet={optimizedWebp(src, 1280)} type="image/webp" />
+      {priority && <source media="(max-width: 767px)" srcSet={optimizedWebp(src, 640)} type="image/webp" />}
+      <source srcSet={webp} type="image/webp" />
       <img
-        src={src}
+        src={fallback}
         alt={alt}
         className={className}
         loading={loading}
@@ -84,7 +89,8 @@ const PROCESS = [
 
 export default function FenceStylePage({
   title, subtitle, description, benefits, heroImage, galleryImages,
-  seoTitle, metaDescription, intro2, features = DEFAULT_FEATURES, faqs = [],
+  seoTitle, metaDescription, intro2, features = DEFAULT_FEATURES,   faqs = [],
+  extraLinks = [],
 }: FenceStylePageProps) {
   // Use a different photo for the intro section than the hero, so the same image
   // isn't repeated on the page. Falls back gracefully for short galleries.
@@ -197,6 +203,13 @@ export default function FenceStylePage({
               <Link to="/contact/" className="group inline-flex items-center gap-2 px-6 py-3 bg-[#0f172a] text-white text-sm font-bold rounded-full hover:bg-cyan-600 transition-all hover:shadow-lg hover:shadow-cyan-500/20">
                 Get a Free Quote <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
+              {extraLinks.length > 0 && (
+                <p className="mt-4 text-sm text-gray-600">
+                  {extraLinks.map((link) => (
+                    <Link key={link.to} to={link.to} className="mr-4 font-semibold text-cyan-700 underline">{link.label}</Link>
+                  ))}
+                </p>
+              )}
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="w-full md:w-1/2">
               <div className="relative w-full h-[25rem] sm:h-[31rem] md:h-[34rem] pt-3 pr-3 sm:pt-5 sm:pr-5">

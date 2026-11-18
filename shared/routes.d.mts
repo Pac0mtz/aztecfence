@@ -2,6 +2,7 @@ export interface Page {
   path: string;
   title: string;
   description: string;
+  h1?: string;
   linkLabel?: string;
 }
 

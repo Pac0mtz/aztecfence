@@ -46,6 +46,7 @@ function request({ method = "GET", path: urlPath, host = "aztecfence.net", proto
               status: res.statusCode,
               location: res.headers.location || null,
               type: res.headers["content-type"] || "",
+              robots: res.headers["x-robots-tag"] || "",
               body: Buffer.concat(chunks).toString("utf8"),
             });
           });
@@ -110,7 +111,39 @@ test("unknown routes are HTTP 404 pages, and real routes stay 200", async () => 
   const thankYou = await request({ path: "/thank-you/" });
   assert.equal(thankYou.status, 200);
   assert.match(thankYou.body, /noindex, nofollow/);
+  assert.equal(thankYou.robots, "noindex, nofollow");
   assert.match(thankYou.body, /rel="canonical" href="https:\/\/aztecfence\.net\/thank-you\/"/);
+  assert.match(thankYou.body, /gtag\('config', 'AW-11484223030'\);/);
+  assert.match(thankYou.body, /aztec_thankyou_pv/);
+  assert.equal((thankYou.body.match(/<h1/g) || []).length, 1);
+
+  const terms = await request({ path: "/terms-and-conditions/" });
+  assert.equal(terms.status, 200);
+  assert.equal(terms.body.includes("noindex"), false);
+  assert.equal(terms.robots, "");
+
+  const home = await request({ path: "/" });
+  assert.match(home.body, /30 Years In Business\. 25K\+ Projects Done\. 41\+ Professional Experts\./);
+  assert.match(home.body, /<h1>Our Fences Stand Firm As Our Reputation<\/h1>/);
+  assert.equal((home.body.match(/<h1/g) || []).length, 1);
+
+  const aluminum = await request({ path: "/aluminum-fences/" });
+  assert.match(aluminum.body, /Rust-free aluminum and pool-code fence installation/);
+  assert.equal(aluminum.body.includes("that's"), false);
+
+  const pool = await request({ path: "/pool-fences/" });
+  assert.equal(pool.status, 200);
+  assert.match(pool.body, /<h1>Pool Fence Installation<\/h1>/);
+  assert.match(pool.body, /"@type":"Service"/);
+  assert.equal(pool.body.includes("AggregateRating"), false);
+
+  const images = await request({ path: "/images/" });
+  assert.equal(images.status, 404);
+  assert.match(images.body, /<h1>Page not found<\/h1>/);
+  assert.equal(images.body.includes("Forbidden"), false);
+
+  const hidden = await request({ path: "/.env" });
+  assert.equal(hidden.status, 404);
 });
 
 test("new aliases 301 and static files, sitemap, robots, and the API stay up", async () => {
@@ -127,6 +160,9 @@ test("new aliases 301 and static files, sitemap, robots, and the API stay up", a
     ["/wood-fencing", "/wood-picket-fencing/"],
     ["/wood-fencing/", "/wood-picket-fencing/"],
     ["/wood-fencing?ref=ad", "/wood-picket-fencing/?ref=ad"],
+    ["/wood-picket-fences", "/wood-picket-fencing/"],
+    ["/wood-picket-fences/", "/wood-picket-fencing/"],
+    ["/index.html", "/"],
   ];
   for (const [urlPath, location] of cases) {
     const res = await request({ path: urlPath });
@@ -184,5 +220,19 @@ test("Illinois regains every old Lake County town without duplicates", () => {
   assert.equal(data["@graph"][0].openingHoursSpecification[0].closes, "17:00");
   assert.equal(data["@graph"][0].openingHoursSpecification[1].opens, "07:00");
   assert.equal(data["@graph"][0].openingHoursSpecification[1].closes, "11:00");
-  assert.match(shell, /gtag\('config', 'AW-11484223030'\)/);
+  assert.match(shell, /gtag\('config', 'AW-11484223030'\);/);
+  assert.match(shell, /gtag\('config', 'G-79HY2VCPDP'\);/);
+  assert.match(shell, /HomeAndConstructionBusiness/);
+  assert.equal(data["@graph"][0]["@type"].includes("GeneralContractor"), true);
+  assert.equal(data["@graph"][0].name, "Aztec Fence Company");
+  assert.equal(data["@graph"][0].telephone, "+1-847-740-4655");
+  assert.equal(data["@graph"][0].url, "https://aztecfence.net/");
+  assert.equal(data["@graph"][0].address.streetAddress, "11 N Fairfield Rd");
+  assert.equal(data["@graph"][0].address.addressLocality, "Round Lake");
+  assert.equal(data["@graph"][0].address.addressRegion, "IL");
+  assert.equal(data["@graph"][0].address.postalCode, "60073");
+  assert.equal(data["@graph"][0].geo.latitude, 42.350058);
+  assert.equal(data["@graph"][0].geo.longitude, -88.110773);
+  assert.equal(/aggregateRating|ratingValue|"@type":\s*"Review"/i.test(shell), false);
+  assert.equal(shell.includes("4.9"), false);
 });

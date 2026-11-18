@@ -48,6 +48,8 @@ const SERVICE_LABELS = {
   commercial: "Commercial / industrial",
   residential: "Residential — not sure yet",
   gates: "Gates",
+  pool: "Pool fence",
+  repair: "Fence repair",
 };
 
 const uploadPhotos = multer({

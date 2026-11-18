@@ -1,16 +1,19 @@
 // Single route table for the React app and the production server.
 // A path that is not listed here is not a page: the server returns 404.
-export const PAGES = [
+import { LANDING_PAGES } from "./landings.mjs";
+
+const CORE_PAGES = [
   {
     path: "/",
     title: "Aztec Fence Company | Fence Installation in Northern Illinois",
     description: "Aztec Fence Company installs aluminum, vinyl, wood, chain link & commercial fencing across Northern Illinois. 30+ years, licensed & insured. Free quotes — (847) 740-4655.",
     linkLabel: "Home",
+    h1: "Our Fences Stand Firm As Our Reputation",
   },
   {
     path: "/aluminum-fences/",
     title: "Aluminum Fence Installation in Northern Illinois | Aztec Fence",
-    description: "Ornamental aluminum fencing that's rust-free, low-maintenance, and backed by a lifetime warranty. Pool-code options across Northern Illinois. Free quotes — call (847) 740-4655.",
+    description: "Rust-free aluminum and pool-code fence installation in Northern Illinois. Lifetime warranty. Free quotes. (847) 740-4655.",
     linkLabel: "Aluminum fences",
   },
   {
@@ -24,11 +27,6 @@ export const PAGES = [
     title: "Wood Picket Fence Installation in Northern Illinois | Aztec Fence",
     description: "Custom cedar wood picket fences that add timeless curb appeal to your Northern Illinois home. Spaced, scalloped, and gated designs. Free quotes — call (847) 740-4655.",
     linkLabel: "Wood picket fencing",
-  },
-  {
-    path: "/wood-picket-fences/",
-    title: "Wood Picket Fence Installation in Northern Illinois | Aztec Fence",
-    description: "Custom cedar wood picket fences that add timeless curb appeal to your Northern Illinois home. Spaced, scalloped, and gated designs. Free quotes — call (847) 740-4655.",
   },
   {
     path: "/chain-link-fences/",
@@ -100,6 +98,14 @@ export const PAGES = [
     description: "We received your fence quote request and will contact you shortly.",
   },
 ];
+
+export const PAGES = CORE_PAGES.concat(LANDING_PAGES.map((page) => ({
+  path: page.path,
+  title: page.title,
+  description: page.description,
+  h1: page.h1,
+  linkLabel: page.linkLabel,
+})));
 
 export function routePath(path) {
   const match = PAGES.find((page) => page.path === path);

@@ -10,6 +10,8 @@ const fenceStyles = [
   { label: "Security Fences", path: "/security-fences/" },
   { label: "Vinyl Picket Fencing", path: "/vinyl-picket-fencing/" },
   { label: "Wood Picket Fencing", path: "/wood-picket-fencing/" },
+  { label: "Pool Fences", path: "/pool-fences/" },
+  { label: "Fence Repair", path: "/fence-repair/" },
 ];
 
 const navLinks = [
@@ -22,6 +24,7 @@ const navLinks = [
     label: "Fence Styles",
     dropdown: fenceStyles,
   },
+  { label: "Areas", path: "/service-areas/" },
   { label: "About", path: "/about-us/" },
   { label: "Contact", path: "/contact/" },
 ];
@@ -55,6 +58,8 @@ export default function Navbar() {
             <motion.img
               src="/images/AZTEC-Fence-logo-round.png"
               alt="Aztec Fence Company"
+              width={320}
+              height={320}
               className="h-14 w-auto"
               whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}

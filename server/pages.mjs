@@ -1,5 +1,7 @@
 import express from "express";
 import { PAGES } from "../shared/routes.mjs";
+import { landingByPath, landingJsonLd } from "../shared/landings.mjs";
+import { thankYouGuardScript } from "../shared/ads-tracking.mjs";
 import { applyRobotsMeta, setRobots } from "./redirects.mjs";
 
 const SITE = "https://aztecfence.net";
@@ -17,7 +19,10 @@ export function lookupPage(pathname) {
 }
 
 function escapeAttr(value) {
-  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function escapeHtml(value) {
@@ -54,13 +59,24 @@ export function renderPage(html, page) {
     `<meta property="og:url" content="${canonical}"`,
   );
   out = applyRobotsMeta(out, pathname);
+  if (pathname === "/thank-you/") {
+    out = out.replace("<!-- Google tag (gtag.js) -->", `${thankYouGuardScript()}    <!-- Google tag (gtag.js) -->`);
+  }
+  const landing = landingByPath(pathname);
+  if (landing) {
+    const json = JSON.stringify(landingJsonLd(landing)).replace(/</g, "\\u003c");
+    out = out.replace("</head>", `<script type="application/ld+json" id="page-jsonld">${json}</script>\n</head>`);
+  }
 
-  const extra =
+  let extra =
     pathname === "/privacy-policy/"
       ? `<p>Aztec Fence Company collects name, email, phone, and project details from our quote form so we can contact you. We use Google Ads tags to measure quote requests and calls. We do not sell personal information. Email sales@aztecfence.net or call (847) 740-4655 with privacy questions.</p>`
       : `<p>${escapeHtml(page.description)}</p>`;
+  if (pathname === "/") {
+    extra += `<p>30 Years In Business. 25K+ Projects Done. 41+ Professional Experts.</p>`;
+  }
 
-  const crawler = `<div id="crawler-fallback" aria-hidden="true"><main><h1>${escapeHtml(page.title)}</h1>${extra}<p>Aztec Fence Company, 11 N Fairfield Rd, Round Lake, IL 60073. <a href="tel:8477404655">(847) 740-4655</a>. <a href="/contact/">Free quote</a>. <a href="/privacy-policy/">Privacy Policy</a>.</p></main></div>`;
+  const crawler = `<div id="crawler-fallback"><main><h1>${escapeHtml(page.h1 || page.title)}</h1>${extra}<p>Aztec Fence Company, 11 N Fairfield Rd, Round Lake, IL 60073. <a href="tel:8477404655">(847) 740-4655</a>. <a href="/contact/">Free quote</a>. <a href="/privacy-policy/">Privacy Policy</a>.</p></main></div>`;
   out = out.replace(/<div id="root"><\/div>/, `<div id="root"></div>${crawler}`);
   return out;
 }
@@ -101,13 +117,24 @@ export function renderNotFound(html, pathname) {
 }
 
 export function installPages(app, { distDir, html }) {
-  app.use(express.static(distDir, { index: false }));
+  // dotfiles stay ignored (404). A trailing-slash directory must not surface as 403.
+  app.use(express.static(distDir, { index: false, dotfiles: "ignore", redirect: false, fallthrough: true }));
   app.get(/^\/(?!api\/).*/, (req, res) => {
     const page = lookupPage(req.path);
     if (page) {
+      if (page.path === "/thank-you/") res.setHeader("X-Robots-Tag", "noindex, nofollow");
       res.status(200).type("html").send(renderPage(html, page));
       return;
     }
     res.status(404).type("html").send(renderNotFound(html, normalizePath(req.path)));
+  });
+  app.use((err, req, res, next) => {
+    if (res.headersSent) return next(err);
+    const status = Number(err?.status || err?.statusCode);
+    if (status === 403) {
+      res.status(404).type("html").send(renderNotFound(html, normalizePath(req.path)));
+      return;
+    }
+    next(err);
   });
 }
