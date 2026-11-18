@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import SiteImage from "./SiteImage";
 
 export default function Footer() {
   return (
     <footer className="bg-[#0f172a] text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-5">
-        <img src="/images/aluminum-02.jpg" alt="" className="w-full h-full object-cover" />
+        <SiteImage src="/images/aluminum-02.jpg" alt="" className="w-full h-full object-cover" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a] via-[#0f172a]/98 to-[#0f172a]" />
       <div className="relative max-w-7xl mx-auto px-4 py-16">
@@ -66,7 +67,7 @@ export default function Footer() {
             <h3 className="text-2xl font-bold mb-6 text-cyan-400">Find Us</h3>
             <div className="rounded-xl overflow-hidden shadow-lg shadow-gray-900/40 border border-white/10">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2951.3777232346844!2d-88.10641492352565!3d42.27433887119966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880f9f6f5a5a5a5b%3A0x1234567890abcdef!2s11%20N%20Fairfield%20Rd%2C%20Round%20Lake%2C%20IL%2060073!5e0!3m2!1sen!2sus!4v1700000000000"
+                src="https://maps.google.com/maps?q=11%20N%20Fairfield%20Rd%2C%20Round%20Lake%2C%20IL%2060073&hl=en&z=16&output=embed"
                 width="100%"
                 height="200"
                 style={{ border: 0 }}
@@ -81,6 +82,10 @@ export default function Footer() {
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
           <div className="flex items-center gap-6">
+            <Link to="/service-areas/" className="hover:text-cyan-400 transition-colors">Service areas</Link>
+            <Link to="/pool-fences/" className="hover:text-cyan-400 transition-colors">Pool fences</Link>
+            <Link to="/fence-repair/" className="hover:text-cyan-400 transition-colors">Fence repair</Link>
+            <Link to="/kenosha-wi/" className="hover:text-cyan-400 transition-colors">Kenosha</Link>
             <Link to="/privacy-policy/" className="hover:text-cyan-400 transition-colors">Privacy Policy</Link>
             <Link to="/terms-and-conditions/" className="hover:text-cyan-400 transition-colors">Terms and Conditions</Link>
           </div>

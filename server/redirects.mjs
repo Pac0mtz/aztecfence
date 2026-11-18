@@ -14,6 +14,8 @@ const LEGACY_PATHS = new Map([
   ["/get-a-quote", "/contact/"],
   ["/free-quote", "/contact/"],
   ["/wood-fencing", "/wood-picket-fencing/"],
+  ["/wood-picket-fences", "/wood-picket-fencing/"],
+  ["/index.html", "/"],
 ]);
 
 export function legacyRedirectPath(pathname) {

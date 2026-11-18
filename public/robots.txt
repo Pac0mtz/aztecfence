@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /terms-and-conditions/
-Disallow: /thank-you/
 
 User-agent: AdsBot-Google
 Allow: /

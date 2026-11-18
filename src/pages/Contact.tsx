@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Phone, MapPin, Send, AlertCircle, Loader2 } from "lucide-react";
 import Seo, { SITE_URL } from "../components/Seo";
+import SiteImage from "../components/SiteImage";
 import QuotePhotoUpload from "../components/QuotePhotoUpload";
 import { getAdsParams, saveLeadUserData } from "../lib/ads";
 
@@ -49,8 +50,8 @@ export default function Contact() {
   return (
     <div className="bg-[#0f172a]">
       <Seo
-        title="Free Fence Quote | Aztec Fence Company Northern Illinois"
-        description="Get a free Aztec Fence quote. Send photos of your yard, fence type, and property address. Call (847) 740-4655 or request an estimate online."
+        title="Contact Aztec Fence Company | Free Fence Quote in Northern Illinois"
+        description="Contact Aztec Fence Company for a free fencing consultation and quote. Call (847) 740-4655 or visit us at 11 N Fairfield Rd, Round Lake, IL 60073."
         keywords="free fence quote, fence estimate Northern Illinois, Round Lake fence quote, upload fence photos"
         jsonLd={{
           "@context": "https://schema.org",
@@ -66,10 +67,11 @@ export default function Contact() {
 
       <section className="quote-contact-section relative text-white overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <SiteImage
             src="/images/Residential-vinyl-privacy-fence-11-1.jpg"
             alt=""
             className="w-full h-full object-cover scale-105"
+            priority
           />
           <div className="absolute inset-0 bg-[#0f172a]/40 backdrop-blur-[3px]" />
         </div>
@@ -150,6 +152,8 @@ export default function Contact() {
                   <option value="aluminum">Aluminum</option>
                   <option value="chain-link">Chain link</option>
                   <option value="gates">Gates</option>
+                  <option value="pool">Pool fence</option>
+                  <option value="repair">Fence repair</option>
                   <option value="commercial">Commercial / industrial</option>
                   <option value="residential">Residential — not sure yet</option>
                 </select>

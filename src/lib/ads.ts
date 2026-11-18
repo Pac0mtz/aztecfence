@@ -1,18 +1,27 @@
 /**
  * Google Ads / GA4 helpers for Aztec Fence.
  *
- * The sitewide tag is the official snippet in index.html (first HTML for every
- * route, including /thank-you/ and /contact-us/). IDs:
+ * The sitewide tag is the official snippet in index.html and is not rewritten.
+ * IDs:
  *   AW-11484223030  Google Ads
  *   G-79HY2VCPDP    GA4 (aztecfence.net)
  *
- * "Book appointment" is a URL page-load conversion on the base Ads tag
- * (URLs starting with aztecfence.net/thank-you). There is no official
- * AW-11484223030/label, so these stay empty and this module does not send
- * a conversion event. Do not point tracking at /thank-you/thank-you.
+ * "Book appointment" is the Ads URL page-load on /thank-you/. There is no
+ * AW-11484223030/label, so this module never sends an event named conversion.
+ * A repeat hit in the same session is suppressed before that snippet runs.
+ * Phone clicks send click_to_call. A call conversion label is still required
+ * before calls can count as Ads conversions.
  */
-export const GOOGLE_ADS_ID = "AW-11484223030";
-export const GA4_MEASUREMENT_ID = "G-79HY2VCPDP";
+import {
+  GOOGLE_ADS_ID,
+  GA4_MEASUREMENT_ID,
+  allowAnotherConversion,
+  callClickEvents,
+  createPageTracker,
+  leadEvents,
+} from "../../shared/ads-tracking.mjs";
+
+export { GOOGLE_ADS_ID, GA4_MEASUREMENT_ID };
 export const LEAD_CONVERSION_LABEL = "";
 export const PHONE_CONVERSION_LABEL = "";
 
@@ -29,7 +38,6 @@ const ADS_KEYS = [
 
 const STORAGE_KEY = "aztec_ads";
 const USER_DATA_KEY = "aztec_ads_user";
-const LEAD_FIRED_KEY = "aztec_ads_lead_fired";
 
 export type AdsParams = Partial<Record<(typeof ADS_KEYS)[number] | "landing", string>>;
 
@@ -76,7 +84,7 @@ export function captureAdsParams() {
 export function saveLeadUserData(data: UserData) {
   try {
     sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(data));
-    sessionStorage.removeItem(LEAD_FIRED_KEY);
+    allowAnotherConversion(browserStorage());
   } catch {
     /* ignore */
   }
@@ -99,17 +107,36 @@ function toE164(phone: string): string | undefined {
   return undefined;
 }
 
-function sendTo(label: string) {
-  return GOOGLE_ADS_ID && label ? `${GOOGLE_ADS_ID}/${label}` : undefined;
+function browserStorage() {
+  return {
+    getItem: (key: string) => {
+      try { return sessionStorage.getItem(key); } catch { return null; }
+    },
+    setItem: (key: string, value: string) => {
+      try { sessionStorage.setItem(key, value); } catch { /* ignore */ }
+    },
+    removeItem: (key: string) => {
+      try { sessionStorage.removeItem(key); } catch { /* ignore */ }
+    },
+  };
+}
+
+const pageTracker = createPageTracker(browserStorage());
+
+export function trackSpaPageView(pathname: string) {
+  for (const event of pageTracker.view(pathname)) {
+    const params = event.params as { page_path?: string };
+    gtag("event", event.name, {
+      ...event.params,
+      page_location: `${window.location.origin}${params.page_path || ""}`,
+      page_title: document.title,
+    });
+  }
 }
 
 export function reportLeadConversion() {
-  try {
-    if (sessionStorage.getItem(LEAD_FIRED_KEY)) return;
-    sessionStorage.setItem(LEAD_FIRED_KEY, "1");
-  } catch {
-    /* still fire once per page load */
-  }
+  const events = leadEvents(browserStorage());
+  if (!events.length) return;
 
   const user = readLeadUserData();
   if (user?.email || user?.phone) {
@@ -119,26 +146,18 @@ export function reportLeadConversion() {
     });
   }
 
-  const conversion = sendTo(LEAD_CONVERSION_LABEL);
-  if (conversion) {
-    gtag("event", "conversion", { send_to: conversion });
-  }
-  gtag("event", "generate_lead", { method: "contact_form" });
+  for (const event of events) gtag("event", event.name, event.params);
 }
 
-export function reportPhoneConversion() {
-  const conversion = sendTo(PHONE_CONVERSION_LABEL);
-  if (conversion) {
-    gtag("event", "conversion", { send_to: conversion });
-  }
-  gtag("event", "phone_click", { event_category: "engagement" });
+export function reportPhoneConversion(href?: string) {
+  for (const event of callClickEvents(href)) gtag("event", event.name, event.params);
 }
 
 function onTelClick(event: MouseEvent) {
   const target = event.target;
   if (!(target instanceof Element)) return;
   const link = target.closest("a[href^='tel:']");
-  if (link) reportPhoneConversion();
+  if (link) reportPhoneConversion(link.getAttribute("href") || undefined);
 }
 
 export function initGoogleAds() {

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { SERVICE_AREAS } from "../../shared/service-areas.mjs";
+import { placePath } from "../../shared/landings.mjs";
 import Seo from "../components/Seo";
+import SiteImage from "../components/SiteImage";
 import { motion } from "framer-motion";
 import { Phone, Check, ArrowRight, Star, Shield, Users, Award, Quote } from "lucide-react";
 import {
@@ -18,7 +20,6 @@ const serviceIcons: Record<string, FenceIcon> = {
   residential: ResidentialIcon,
 };
 import { useState, useRef, useEffect } from "react";
-import CountUp from "react-countup";
 
 type Slide = { src: string; alt: string; label?: string };
 
@@ -181,13 +182,7 @@ const gateSlides: Slide[] = [
 function ProjectCard({ img }: { img: (typeof carouselImages)[number] }) {
   return (
     <div className="featured-card relative shrink-0 size-[148px] sm:h-[240px] sm:w-[320px] sm:size-auto md:h-[clamp(240px,32vh,320px)] md:w-auto md:aspect-[4/3] rounded-xl overflow-hidden pointer-events-none">
-      <img
-        src={img.src}
-        alt={img.label}
-        loading="lazy"
-        decoding="async"
-        className="w-full h-full object-cover"
-      />
+      <SiteImage src={img.src} alt={img.label} className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 px-3 py-2.5 sm:p-4">
         <p className="text-white font-bold text-sm sm:text-lg leading-snug">{img.label}</p>
@@ -269,26 +264,28 @@ function HeroCopy() {
         Aztec Fence Company
       </motion.p>
 
-      <div className="overflow-hidden mb-2">
-        <motion.h1
-          initial={{ y: 80 }}
-          animate={{ y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-          className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
-        >
-          Our Fences <span className="text-[#004AAD] md:text-[#7EB6FF]">Stand Firm</span>
-        </motion.h1>
-      </div>
-      <div className="overflow-hidden mb-6 sm:mb-8">
-        <motion.h1
-          initial={{ y: 80 }}
-          animate={{ y: 0 }}
-          transition={{ delay: 0.55, duration: 0.8, ease: "easeOut" }}
-          className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white"
-        >
-          As Our <span className="text-[#004AAD] md:text-[#7EB6FF]">Reputation</span>
-        </motion.h1>
-      </div>
+      <h1 className="mb-6 sm:mb-8 text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-[#0f172a] md:text-white">
+        <span className="block overflow-hidden mb-2">
+          <motion.span
+            initial={{ y: 80 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+            className="block"
+          >
+            Our Fences <span className="text-[#004AAD] md:text-[#7EB6FF]">Stand Firm</span>
+          </motion.span>
+        </span>
+        <span className="block overflow-hidden">
+          <motion.span
+            initial={{ y: 80 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.55, duration: 0.8, ease: "easeOut" }}
+            className="block"
+          >
+            As Our <span className="text-[#004AAD] md:text-[#7EB6FF]">Reputation</span>
+          </motion.span>
+        </span>
+      </h1>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -370,7 +367,7 @@ function PhotoSlider({
             className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
             style={{ transform: `translateX(${(i - index) * 100}%)` }}
           >
-            <img src={s.src} alt={s.alt} className={`h-full w-full object-cover ${imageClassName}`} />
+            <SiteImage src={s.src} alt={s.alt} className={`h-full w-full object-cover ${imageClassName}`} />
           </div>
         ))}
       </div>
@@ -467,24 +464,6 @@ function RciBanner({ className = "" }: { className?: string }) {
   );
 }
 
-function AnimatedCounter({ end, suffix = "" }: { end: number; suffix?: string }) {
-  const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold: 0.5 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-  return (
-    <span ref={ref}>
-      {inView ? <CountUp end={end} duration={2.5} suffix={suffix} /> : `0${suffix}`}
-    </span>
-  );
-}
-
 export default function Home() {
   const [activeService, setActiveService] = useState("wood");
   const active = services.find((s) => s.id === activeService) || services[0];
@@ -493,7 +472,7 @@ export default function Home() {
     <div>
       <Seo
         title="Aztec Fence Company | Fence Installation in Northern Illinois"
-        description="Aztec Fence Company installs aluminum, vinyl, wood, chain link & commercial fencing across Northern Illinois. 30+ years, licensed & insured. Free quotes — call (847) 740-4655."
+        description="Aztec Fence Company installs aluminum, vinyl, wood, chain link & commercial fencing across Northern Illinois. 30+ years, licensed & insured. Free quotes — (847) 740-4655."
         keywords="fence company Northern Illinois, fence installation, aluminum fence, vinyl fence, wood fence, chain link fence, privacy fence, commercial fencing, Round Lake IL, Lake County fence contractor"
         path="/"
       />
@@ -595,18 +574,18 @@ export default function Home() {
       {/* Stats — Animated counters */}
       <section className="relative bg-[#0f172a] text-white py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <img src="/images/aluminum-05.jpg" alt="" className="w-full h-full object-cover" />
+          <SiteImage src="/images/aluminum-05.jpg" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-[#0f172a]/95 to-blue-900/90" />
         <div className="relative max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
             {[
-              { icon: Award, end: 30, suffix: "", label: "Years In Business" },
-              { icon: Shield, end: 25, suffix: "K+", label: "Projects Done" },
-              { icon: Users, end: 41, suffix: "+", label: "Professional Experts" },
+              { icon: Award, value: "30", label: "Years In Business" },
+              { icon: Shield, value: "25K+", label: "Projects Done" },
+              { icon: Users, value: "41+", label: "Professional Experts" },
             ].map((stat, idx) => (
               <motion.div
-                key={idx}
+                key={stat.label}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -619,10 +598,7 @@ export default function Home() {
                 >
                   <stat.icon size={36} className="text-cyan-400 mb-3" />
                 </motion.div>
-                <p className="text-5xl md:text-6xl font-bold">
-                  <AnimatedCounter end={stat.end} />
-                  {stat.suffix}
-                </p>
+                <p className="text-5xl md:text-6xl font-bold">{stat.value}</p>
                 <p className="text-gray-400 text-sm mt-2 font-medium">{stat.label}</p>
               </motion.div>
             ))}
@@ -837,9 +813,14 @@ export default function Home() {
               <div key={group.state}>
                 <h3 className="text-sm font-bold uppercase tracking-widest text-cyan-600 mb-3">{group.state}</h3>
                 <ul className="columns-2 md:columns-3 gap-x-8 text-gray-700 leading-relaxed">
-                  {group.places.map((place) => (
-                    <li key={place} className="break-inside-avoid py-0.5">{place}</li>
-                  ))}
+                  {group.places.map((place) => {
+                    const href = placePath(place);
+                    return (
+                      <li key={place} className="break-inside-avoid py-0.5">
+                        {href ? <Link to={href} className="hover:text-cyan-700">{place}</Link> : place}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
@@ -850,7 +831,7 @@ export default function Home() {
       {/* CTA Section — Floating elements */}
       <section className="relative py-24 bg-[#0f172a] text-white overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/images/aluminum-19.jpg" alt="" className="w-full h-full object-cover opacity-15" />
+          <SiteImage src="/images/aluminum-19.jpg" alt="" className="w-full h-full object-cover opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/95 via-[#0f172a]/90 to-blue-900/95" />
         </div>
         {/* Floating decorative circles */}

@@ -7,7 +7,6 @@ export default function Terms() {
       <Seo
         title="Terms & Conditions | Aztec Fence Company"
         description="Terms and conditions for using the Aztec Fence Company website and services."
-        noindex
       />
       <section className="relative h-[40vh] min-h-[300px] text-white overflow-hidden">
         <div className="absolute inset-0">

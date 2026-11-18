@@ -6,6 +6,7 @@ import App from './App.tsx'
 import { initGoogleAds } from './lib/ads'
 
 initGoogleAds()
+document.getElementById("crawler-fallback")?.remove()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

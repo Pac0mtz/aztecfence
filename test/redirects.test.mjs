@@ -3,6 +3,7 @@ import fs from "node:fs";
 import http from "node:http";
 import test from "node:test";
 import app from "../server/app.mjs";
+import { PAGES } from "../shared/routes.mjs";
 import {
   appendOriginalQuery,
   applyRobotsMeta,
@@ -311,9 +312,15 @@ test("public files keep the ads tag, drop the fake rating, and omit the thank-yo
 
   const sitemap = fs.readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8");
   assert.equal(sitemap.toLowerCase().includes("thank-you"), false);
-  assert.match(sitemap, /https:\/\/aztecfence\.net\/vinyl-picket-fencing\//);
-  assert.match(sitemap, /https:\/\/aztecfence\.net\/aluminum-fences\//);
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]).sort();
+  const expected = PAGES
+    .filter((page) => page.path !== "/thank-you/")
+    .map((page) => (page.path === "/" ? "https://aztecfence.net/" : `https://aztecfence.net${page.path}`))
+    .sort();
+  assert.deepEqual(locs, expected);
 
   const robots = fs.readFileSync(new URL("../public/robots.txt", import.meta.url), "utf8");
-  assert.match(robots, /Disallow: \/thank-you\//);
+  assert.equal(robots.includes("Disallow"), false);
+  assert.match(robots, /User-agent: AdsBot-Google\nAllow: \//);
+  assert.match(robots, /User-agent: AdsBot-Google-Mobile\nAllow: \//);
 });

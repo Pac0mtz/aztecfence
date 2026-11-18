@@ -6,7 +6,8 @@ export default function AluminumFences() {
       title="Premium Aluminum"
       subtitle="Elegant, Rust-Free Aluminum Fencing"
       seoTitle="Aluminum Fence Installation in Northern Illinois | Aztec Fence"
-      metaDescription="Ornamental aluminum fencing that's rust-free, low-maintenance, and backed by a lifetime warranty. Pool-code options across Northern Illinois. Free quotes — call (847) 740-4655."
+      metaDescription="Rust-free aluminum and pool-code fence installation in Northern Illinois. Lifetime warranty. Free quotes. (847) 740-4655."
+      extraLinks={[{ to: "/pool-fences/", label: "Pool fence installation" }]}
       description="Aluminum fences offer the perfect blend of strength, beauty, and low maintenance. Resistant to rust and corrosion, aluminum fencing is ideal for any climate. With ornamental designs available, these fences enhance curb appeal while providing reliable security for your property. Our premium aluminum fences come with a lifetime warranty and require virtually no upkeep."
       intro2="Powder-coated in classic black and other finishes, our ornamental aluminum fencing delivers the wrought-iron look without the rust — perfect for front yards, gardens, and pool enclosures that meet local safety codes."
       benefits={["Rust and corrosion resistant", "Elegant ornamental designs", "Virtually no maintenance", "Lifetime warranty", "Pool-code compliant options", "Ideal for any climate"]}
