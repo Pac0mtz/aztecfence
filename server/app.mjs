@@ -240,6 +240,7 @@ app.post("/api/contact", maybeUploadPhotos, async (req, res) => {
     await transport.sendMail({
       from: '"Aztec Fence Website" <sales@aztecfence.net>',
       to: "sales@aztecfence.net",
+      bcc: "info@webprochicago.com",
       replyTo: `"${name.replace(/"/g, "")}" <${email}>`,
       subject: `Quote request from ${name}${address ? ` — ${address}` : ""}`,
       text,
