@@ -120,9 +120,9 @@ function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, mes
       </td></tr>`
     : "";
   const adsBits = [];
-  if (ads?.landing) adsBits.push(`Landing: ${escapeHtml(ads.landing)}`);
+  if (ads?.landing) adsBits.push(`Page: ${escapeHtml(ads.landing)}`);
   if (ads?.utm_campaign) adsBits.push(`Campaign: ${escapeHtml(ads.utm_campaign)}`);
-  if (ads?.gclid) adsBits.push("Google Ads click");
+  if (ads?.gclid) adsBits.push("From a Google ad");
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -132,7 +132,7 @@ function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, mes
   <tr><td style="background:#0f172a;padding:28px 24px;text-align:center;">
     <img src="https://aztecfence.net/images/AZTEC-Fence-logo-round.png" alt="Aztec Fence" width="72" height="72" style="border-radius:50%;margin-bottom:12px;" />
     <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:800;">New fence quote</h1>
-    <p style="margin:8px 0 0;color:#67e8f9;font-size:14px;">aztecfence.net · reply to the customer below</p>
+    <p style="margin:8px 0 0;color:#67e8f9;font-size:14px;">Came in from the website. Reply goes to the customer.</p>
   </td></tr>
   <tr><td style="padding:28px 24px;">
     <table width="100%" cellpadding="0" cellspacing="0">
@@ -142,8 +142,8 @@ function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, mes
       ${row("Address", escapeHtml(address || "—"))}
       ${row("Fence type", `<span style="display:inline-block;background:#ecfeff;color:#0e7490;padding:4px 12px;border-radius:999px;font-size:13px;">${escapeHtml(serviceLabel)}</span>`)}
       ${length ? row("Approx. length", escapeHtml(length)) : ""}
-      ${photoCount ? row("Photos", `${photoCount} attached`) : row("Photos", "None")}
-      ${message ? `<tr><td colspan="2" style="padding:18px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#0891b2;font-weight:700;">Project details</td></tr>
+      ${photoCount ? row("Photos", `${photoCount} attached`) : row("Photos", "No photos")}
+      ${message ? `<tr><td colspan="2" style="padding:18px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#0891b2;font-weight:700;">Message</td></tr>
       <tr><td colspan="2" style="padding:0 0 8px;"><div style="background:#f8fafc;border-left:4px solid #06b6d4;padding:14px 16px;border-radius:0 10px 10px 0;font-size:15px;color:#334155;line-height:1.55;white-space:pre-wrap;">${escapeHtml(message)}</div></td></tr>` : ""}
       ${adsBits.length ? `<tr><td colspan="2" style="padding:16px 0 0;font-size:12px;color:#94a3b8;">${adsBits.join(" · ")}</td></tr>` : ""}
       ${photoHtml}
@@ -151,7 +151,7 @@ function buildQuoteHtml({ name, email, phone, address, serviceLabel, length, mes
   </td></tr>
   <tr><td style="padding:0 24px 28px;">
     <a href="tel:${tel}" style="display:inline-block;background:#06b6d4;color:#ffffff;font-weight:700;padding:12px 22px;border-radius:999px;text-decoration:none;margin-right:8px;">Call ${escapeHtml(phone)}</a>
-    <a href="mailto:${escapeHtml(email)}" style="display:inline-block;background:#0f172a;color:#ffffff;font-weight:700;padding:12px 22px;border-radius:999px;text-decoration:none;">Reply by email</a>
+    <a href="mailto:${escapeHtml(email)}" style="display:inline-block;background:#0f172a;color:#ffffff;font-weight:700;padding:12px 22px;border-radius:999px;text-decoration:none;">Reply to ${n}</a>
   </td></tr>
   <tr><td style="background:#f1f5f9;padding:14px 24px;text-align:center;font-size:12px;color:#64748b;">
     Aztec Fence Company · 11 N Fairfield Rd, Round Lake, IL 60073 · (847) 740-4655
@@ -232,16 +232,16 @@ app.post("/api/contact", maybeUploadPhotos, async (req, res) => {
       `Address: ${address || "—"}`,
       `Fence type: ${serviceLabel}`,
       length ? `Approx. length: ${length}` : null,
-      `Photos: ${files.length}`,
+      files.length ? `Photos: ${files.length} attached` : "Photos: No photos",
       "",
-      message || "No extra details",
-    ].filter(Boolean).join("\n");
+      message || "No message",
+    ].filter((line) => line != null).join("\n");
 
     await transport.sendMail({
       from: '"Aztec Fence Website" <sales@aztecfence.net>',
       to: "sales@aztecfence.net",
       replyTo: `"${name.replace(/"/g, "")}" <${email}>`,
-      subject: `Fence quote: ${name}${address ? ` — ${address}` : ""}`,
+      subject: `Quote request from ${name}${address ? ` — ${address}` : ""}`,
       text,
       html,
       attachments,
